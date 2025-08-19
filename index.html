@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Retiro Seguro — Chateá con el asistente y calculá tu retiro</title>
+  <meta name="description" content="Calculá cuánto podés acumular para tu retiro y chateá con un asesor. Simple, rápido y sin compromiso." />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Dialogflow Messenger (CX) -->
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+
+  <!-- (Opcional) GA4 y Meta Pixel: reemplazar IDs o eliminar este bloque si no se usa aún -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXX');
+  </script>
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);
+    t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+    }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'XXXXXXXXXXXXXXX');
+    fbq('track', 'PageView');
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <!-- Header -->
+  <header class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="/assets/logo-rs.png" alt="Retiro Seguro" class="h-10 w-10 rounded-lg" />
+      <span class="font-semibold text-lg">Retiro Seguro</span>
+    </div>
+    <a href="#chat" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">Chateá ahora</a>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
+    <div>
+      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
+        Planificá hoy tu retiro.<br/>Viví tranquilo mañana.
+      </h1>
+      <p class="mt-4 text-lg text-slate-700">
+        En 1 minuto, nuestro asistente te guía por la <strong>calculadora</strong> y por las opciones disponibles. Sin compromiso.
+      </p>
+      <div class="mt-6 flex gap-3">
+        <a href="#chat" class="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">Abrir chat</a>
+        <a href="#como-funciona" class="px-5 py-3 rounded-xl bg-white border border-slate-200 hover:border-slate-300">Cómo funciona</a>
+      </div>
+      <p class="mt-3 text-sm text-slate-500">¿Preferís WhatsApp? <a class="underline" href="https://wa.me/549TU_NUMERO?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20seguros%20de%20retiro">Escribinos</a>.</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow p-6">
+      <img src="/assets/preview-chat.png" alt="Vista previa del chat" class="rounded-xl w-full" />
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section id="como-funciona" class="max-w-5xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-6">
+    <div class="bg-white rounded-2xl p-5 shadow">
+      <h3 class="font-semibold">1) Iniciá el chat</h3>
+      <p class="text-sm text-slate-700 mt-2">Hacé clic en “Abrir chat” y seguí las preguntas simples.</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow">
+      <h3 class="font-semibold">2) Calculá tu capital</h3>
+      <p class="text-sm text-slate-700 mt-2">El bot corre la <strong>calculadora</strong> integrada en Dialogflow CX.</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow">
+      <h3 class="font-semibold">3) Dejá tu contacto</h3>
+      <p class="text-sm text-slate-700 mt-2">Podés dejar teléfono o email para que te contacte un asesor.</p>
+    </div>
+  </section>
+
+  <!-- Chat -->
+  <section id="chat" class="max-w-5xl mx-auto px-4 pb-16">
+    <h2 class="text-xl font-semibold mb-2">Chateá con nuestro asistente</h2>
+    <!-- Dialogflow CX Messenger: usando el agente existente -->
+    <df-messenger
+      intent="WELCOME"
+      chat-title="Retiro Seguro"
+      agent-id="27aae0fd-56e8-43e5-9f7c-5ffc6f132462"
+      language-code="es"
+      agent-location="us-central1"
+      expand=""
+    >
+    </df-messenger>
+    <!-- Nota: si tu agente fuera GLOBAL, podés quitar agent-location. -->
+  </section>
+
+  <footer class="text-center text-sm text-slate-500 py-6">
+    © <span id="y"></span> Retiro Seguro — <a href="/privacidad.html" class="underline">Privacidad</a> · <a href="/terminos.html" class="underline">Términos</a>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>

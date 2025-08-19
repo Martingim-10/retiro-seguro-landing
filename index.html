@@ -89,6 +89,32 @@
       expand=""
     >
     </df-messenger>
+    <section id="chat" class="max-w-5xl mx-auto px-4 pb-16">
+  <h2 class="text-xl font-semibold mb-2">Chateá con nuestro asistente</h2>
+
+  <df-messenger
+    intent="WELCOME"
+    chat-title="Retiro Seguro"
+    agent-id="27aae0fd-56e8-43e5-9f7c-5ffc6f132462"
+    language-code="es"
+    agent-location="us-central1"
+    expand="true">
+  </df-messenger>
+</section>
+
+<script>
+  // Hace que los botones “Abrir chat” realmente abran el widget
+  document.querySelectorAll('a[href="#chat"]').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      const df = document.querySelector('df-messenger');
+      if(df && !df.hasAttribute('expand')) df.setAttribute('expand','true');
+      // scroll suave a la sección
+      const el = document.getElementById('chat');
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+</script>
+
     <!-- Nota: si tu agente fuera GLOBAL, podés quitar agent-location. -->
   </section>
 

@@ -189,36 +189,63 @@
     }
   </style>
 
-  <script>
-    // Año del footer
-    document.getElementById('y').textContent = new Date().getFullYear();
+<script>
+  // Año del footer
+  document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Enganchar los botones SOLO cuando el widget esté listo
-    window.addEventListener('df-messenger-loaded', () => {
-      document.querySelectorAll('[data-open-chat]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const bubble = document.querySelector('df-messenger-chat-bubble');
-          if (bubble) {
-            bubble.click();                 // toggle para abrir
-            setTimeout(() => bubble.click(), 0); // segundo toggle si estaba animando
-          }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      });
-      console.log('[DF] widget cargado');
-    });
+  function openChatBubble() {
+    // 1) Intento estándar: click al bubble visible
+    const bubble = document.querySelector('df-messenger-chat-bubble');
+    if (bubble) bubble.click();
 
-    // Smooth scroll en anclas internas
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const href = a.getAttribute('href');
-        if (href.length > 1) {
-          const el = document.querySelector(href);
-          if (el) { e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
-        }
+    // 2) Fallback: click al botón interno dentro del shadow DOM
+    try {
+      const df = document.querySelector('df-messenger');
+      const shadow = df && df.shadowRoot;
+      const openBtn = shadow && shadow.querySelector('button, [role="button"]');
+      if (openBtn) openBtn.click();
+    } catch(e){ /* no-op */ }
+
+    // 3) Segundo intento corto por si estaba animando
+    setTimeout(() => {
+      const bubble2 = document.querySelector('df-messenger-chat-bubble');
+      if (bubble2) bubble2.click();
+    }, 60);
+  }
+
+  // Enganchamos botones cuando el widget esté listo…
+  window.addEventListener('df-messenger-loaded', () => {
+    document.querySelectorAll('[data-open-chat]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openChatBubble();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
-  </script>
+  });
+
+  // …y también por si el usuario hace clic antes de que cargue
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-open-chat]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openChatBubble();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  });
+
+  // Smooth scroll en anclas internas
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const href = a.getAttribute('href');
+      if (href.length > 1) {
+        const el = document.querySelector(href);
+        if (el) { e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
+      }
+    });
+  });
+</script>
+
 </body>
 </html>

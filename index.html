@@ -193,47 +193,37 @@
   // Año del footer
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Abre el chat (un solo intento controlado)
-  function openChatOnce() {
-    const df = document.querySelector('df-messenger');
-    if (!df) return;
-
-    // evita doble ejecución en el mismo tick
-    if (window.__openingChat) return;
-    window.__openingChat = true;
-    setTimeout(() => { window.__openingChat = false; }, 150);
-
-    // fuerza estado "abierto" (no siempre hace efecto, pero no molesta)
-    try { df.setAttribute('open','true'); df.open = true; } catch(e){}
-
-    // click al bubble (toggle). ¡UN SOLO CLICK!
+  function openChat() {
+    console.log('[DF] openChat() llamado');
     const bubble = document.querySelector('df-messenger-chat-bubble');
-    if (bubble) bubble.click();
-
-    // llevar arriba (opcional)
+    if (bubble) {
+      bubble.click();
+      console.log('[DF] bubble.click() ejecutado');
+    } else {
+      console.warn('[DF] bubble NO encontrado');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    return false;
   }
 
-  function attachOpeners() {
+  function wireButtons() {
     const btns = document.querySelectorAll('[data-open-chat]');
-    console.log('[DF] botones con data-open-chat:', btns.length);
+    console.log('[DF] wireButtons -> encontrados', btns.length, 'botones');
     btns.forEach((btn) => {
-      // borro cualquier handler previo para evitar duplicados
-      if (btn.__openChatHandler) {
-        btn.removeEventListener('click', btn.__openChatHandler);
-      }
-      btn.__openChatHandler = (e) => {
+      btn.onclick = (e) => {
         e.preventDefault();
-        e.stopPropagation();              // evita que otro listener vuelva a disparar
-        openChatOnce();
+        e.stopPropagation();
+        return openChat();
       };
-      btn.addEventListener('click', btn.__openChatHandler);
     });
   }
 
-  // Enganchar cuando el DOM y el widget estén listos
-  document.addEventListener('DOMContentLoaded', attachOpeners);
-  window.addEventListener('df-messenger-loaded', attachOpeners);
+  // Enganchar cuando el DOM está listo y cuando el widget carga
+  document.addEventListener('DOMContentLoaded', wireButtons);
+  window.addEventListener('df-messenger-loaded', () => {
+    console.log('[DF] widget cargado');
+    wireButtons();
+  });
 </script>
 
 

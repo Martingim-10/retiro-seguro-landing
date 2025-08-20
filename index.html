@@ -193,22 +193,19 @@
   // Año del footer
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  // Abre el chat intentando varios caminos
+  // Apertura robusta del chat
   function openChatBubble() {
     const df = document.querySelector('df-messenger');
     if (!df) { console.warn('[DF] no existe df-messenger'); return; }
 
-    // 1) toggles en el componente
-    try { df.setAttribute('open', 'true'); } catch(e){}
-    try { df.open = true; } catch(e){}
-    try { df.setAttribute('expand', 'true'); } catch(e){}
-    try { df.setAttribute('expanded', 'true'); } catch(e){}
+    // 1) marca de "abierto"
+    try { df.setAttribute('open', 'true'); df.open = true; } catch(e){}
 
-    // 2) click al bubble del light DOM
+    // 2) click al bubble (light DOM)
     const bubble = document.querySelector('df-messenger-chat-bubble');
     if (bubble) bubble.click();
 
-    // 3) intento dentro del shadow DOM (si es accesible)
+    // 3) intento dentro del shadow DOM
     setTimeout(() => {
       try {
         const shadow = df.shadowRoot;
@@ -221,37 +218,41 @@
     setTimeout(() => {
       const bubble2 = document.querySelector('df-messenger-chat-bubble');
       if (bubble2) bubble2.click();
-    }, 80);
+    }, 120);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Adjunta listeners a TODOS los botones data-open-chat (delegación + directo)
   function attachOpeners() {
     const btns = document.querySelectorAll('[data-open-chat]');
     console.log(`[DF] botones con data-open-chat: ${btns.length}`);
     btns.forEach((btn) => {
-      const handler = (e) => { e.preventDefault(); openChatBubble(); };
-      // evita duplicados
+      const handler = (e) => { e.preventDefault(); console.log('[DF] click -> abrir chat'); openChatBubble(); };
       btn.removeEventListener('click', btn.__openChatHandler || (()=>{}));
       btn.__openChatHandler = handler;
       btn.addEventListener('click', handler);
     });
   }
 
-  // Delegación por si los botones cambian en runtime
+  // Delegación por si se añaden botones dinámicamente
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-open-chat]');
     if (!el) return;
     e.preventDefault();
+    console.log('[DF] delegación -> abrir chat');
     openChatBubble();
   });
 
-  // Enganchar cuando:
-  document.addEventListener('DOMContentLoaded', attachOpeners);     // DOM listo
-  window.addEventListener('df-messenger-loaded', attachOpeners);    // widget listo
+  // Enganchar en DOM listo y cuando el widget carga
+  document.addEventListener('DOMContentLoaded', attachOpeners);
+  window.addEventListener('df-messenger-loaded', () => {
+    console.log('[DF] widget cargado');
+    attachOpeners();
+    // test auto: abre y cierra rápido para verificar que responde
+    // (si ves que se abre 1 vez al cargar, significa que el método funciona)
+    // setTimeout(openChatBubble, 300); // <- podés descomentar 1 prueba
+  });
 </script>
-
 
 
 </body>

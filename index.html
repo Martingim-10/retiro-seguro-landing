@@ -8,10 +8,9 @@
   <meta property="og:title" content="Retiro Seguro — Informate y simulá tu retiro" />
   <meta property="og:description" content="Planes individuales y colectivos, beneficios impositivos y simulador con chat." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/hero.jpg" />
-  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <meta property="og:image" content="assets/logo.png" />
 
-  <!-- Tailwind (rápido para estilos) -->
+  <!-- Tailwind (rápido para estilos: el warning se puede ignorar por ahora) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Dialogflow CX Web Messenger (OFICIAL) -->
@@ -34,12 +33,12 @@
         <a href="#faq" class="hover:text-indigo-700">FAQ</a>
       </nav>
       <div class="flex items-center gap-2">
-        <a data-open-chat class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm cursor-pointer">Chateá ahora</a>
+        <a onclick="return openChat()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm cursor-pointer">Chateá ahora</a>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- Hero (sin hero.jpg para evitar 404) -->
   <section class="max-w-6xl mx-auto px-4 pt-10 pb-6 grid md:grid-cols-2 gap-8 items-center">
     <div>
       <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
@@ -49,16 +48,17 @@
         Conocé cómo funcionan los seguros de retiro, mirá nuestros planes y <strong>simulá tu capital</strong> en 1 minuto con nuestro asistente.
       </p>
       <div class="mt-6 flex flex-wrap gap-3">
-        <a data-open-chat class="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Simular ahora</a>
+        <a onclick="return openChat()" class="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Simular ahora</a>
         <a href="#planes" class="px-5 py-3 rounded-xl bg-white border border-slate-200 hover:border-slate-300">Ver planes</a>
       </div>
       <p class="mt-3 text-sm text-slate-500">¿Preferís WhatsApp? <a class="underline" href="https://wa.me/549TU_NUMERO?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20seguros%20de%20retiro">Escribinos</a>.</p>
     </div>
     <div class="relative">
-      <img src="assets/hero.jpg" alt="Proyectá tu retiro" class="rounded-2xl shadow w-full object-cover aspect-[4/3]" />
-      <div class="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow p-4 hidden md:block">
-        <div class="text-sm text-slate-600">Simulá tu capital estimado</div>
-        <div class="font-semibold">en menos de 1 minuto</div>
+      <div class="rounded-2xl shadow w-full aspect-[4/3] bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow p-4">
+          <div class="text-sm text-slate-600">Simulá tu capital estimado</div>
+          <div class="font-semibold">en menos de 1 minuto</div>
+        </div>
       </div>
     </div>
   </section>
@@ -74,7 +74,7 @@
         <li class="bg-slate-50 rounded-xl p-4">🧾 Beneficio impositivo: deducción en Ganancias</li>
       </ul>
       <div class="mt-5">
-        <a data-open-chat class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Probar simulación</a>
+        <a onclick="return openChat()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Probar simulación</a>
       </div>
     </div>
   </section>
@@ -92,7 +92,7 @@
           <li>Flexibilidad para modificar aportes</li>
         </ul>
         <div class="mt-4 flex gap-2">
-          <a data-open-chat class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Simular</a>
+          <a onclick="return openChat()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Simular</a>
         </div>
       </div>
       <div class="bg-white rounded-2xl shadow p-6">
@@ -104,7 +104,7 @@
           <li>Gestión simple y transparente</li>
         </ul>
         <div class="mt-4 flex gap-2">
-          <a data-open-chat class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Consultar</a>
+          <a onclick="return openChat()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Consultar</a>
         </div>
       </div>
     </div>
@@ -129,7 +129,7 @@
       <div class="bg-white rounded-2xl shadow p-6"><div class="text-3xl">2️⃣</div><div class="font-semibold mt-2">Simulá tu capital</div><p class="text-slate-700 mt-1">El asistente te muestra la proyección en el acto.</p></div>
       <div class="bg-white rounded-2xl shadow p-6"><div class="text-3xl">3️⃣</div><div class="font-semibold mt-2">Elegí cómo avanzar</div><p class="text-slate-700 mt-1">Seguimos por chat, WhatsApp o te contacta un asesor.</p></div>
     </div>
-    <div class="mt-5"><a data-open-chat class="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Abrir chat</a></div>
+    <div class="mt-5"><a onclick="return openChat()" class="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Abrir chat</a></div>
   </section>
 
   <!-- FAQ -->
@@ -155,7 +155,7 @@
         <p class="mt-2 text-indigo-100">Simulá tu plan en 1 minuto o pedí hablar con un asesor. Sin compromiso.</p>
       </div>
       <div class="flex gap-3 md:justify-end">
-        <a data-open-chat class="px-5 py-3 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 cursor-pointer">Simular ahora</a>
+        <a onclick="return openChat()" class="px-5 py-3 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 cursor-pointer">Simular ahora</a>
         <a href="https://wa.me/549TU_NUMERO?text=Hola%20quiero%20asesoramiento%20sobre%20seguros%20de%20retiro" class="px-5 py-3 rounded-xl border border-white/60 hover:bg-white/10">Hablar por WhatsApp</a>
       </div>
     </div>
@@ -189,63 +189,24 @@
     }
   </style>
 
-<script>
-  // Año del footer
-  document.getElementById('y').textContent = new Date().getFullYear();
+  <!-- Script mínimo y fiable -->
+  <script>
+    // Año del footer
+    document.getElementById('y').textContent = new Date().getFullYear();
 
-  function reallyOpenChat() {
-    const df = document.querySelector('df-messenger');
-    const bubble = document.querySelector('df-messenger-chat-bubble');
-    if (!df) return;
-
-    // Marca de abierto (no siempre hace efecto, pero ayuda)
-    try { df.setAttribute('open','true'); df.open = true; } catch(e){}
-
-    // 1) Disparo de MouseEvent COMPOSED al bubble (mejor que bubble.click())
-    if (bubble) {
-      const ev = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
-      bubble.dispatchEvent(ev);
-    }
-
-    // 2) Fallback: click al botón real dentro del shadow DOM
-    setTimeout(() => {
+    // Función global: abre el chat (se llama desde los botones con onclick)
+    function openChat() {
       try {
-        const sr = df.shadowRoot;
-        // Buscar algo clickeable (el botón flotante del widget)
-        const realBtn = sr && (sr.querySelector('button[aria-label], button, [role="button"]'));
-        if (realBtn) {
-          realBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, composed: true }));
-        }
-      } catch(e){}
-    }, 40);
-
-    // 3) Segundo intento por si estaba en animación
-    setTimeout(() => {
-      if (bubble) {
-        const ev2 = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
-        bubble.dispatchEvent(ev2);
+        const df = document.querySelector('df-messenger');
+        const bubble = document.querySelector('df-messenger-chat-bubble');
+        if (df) { df.setAttribute('open','true'); df.open = true; }
+        if (bubble) bubble.click();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch(e) {
+        console.warn('[DF] openChat error:', e);
       }
-    }, 120);
-
-    // Llevar arriba (opcional)
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function wireButtons() {
-    const btns = document.querySelectorAll('[data-open-chat]');
-    btns.forEach((btn) => {
-      // Limpio handlers previos
-      if (btn.__openChatHandler) btn.removeEventListener('click', btn.__openChatHandler);
-      btn.__openChatHandler = (e) => { e.preventDefault(); e.stopPropagation(); reallyOpenChat(); };
-      btn.addEventListener('click', btn.__openChatHandler);
-    });
-  }
-
-  // Enganchar cuando el DOM está listo y cuando el widget termina de cargar
-  document.addEventListener('DOMContentLoaded', wireButtons);
-  window.addEventListener('df-messenger-loaded', wireButtons);
-</script>
-
-
+      return false; // evita navegación
+    }
+  </script>
 </body>
 </html>

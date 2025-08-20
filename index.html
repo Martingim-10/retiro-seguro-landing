@@ -193,39 +193,58 @@
   // Año del footer
   document.getElementById('y').textContent = new Date().getFullYear();
 
-  function openChat() {
-    console.log('[DF] openChat() llamado');
+  function reallyOpenChat() {
+    const df = document.querySelector('df-messenger');
     const bubble = document.querySelector('df-messenger-chat-bubble');
+    if (!df) return;
+
+    // Marca de abierto (no siempre hace efecto, pero ayuda)
+    try { df.setAttribute('open','true'); df.open = true; } catch(e){}
+
+    // 1) Disparo de MouseEvent COMPOSED al bubble (mejor que bubble.click())
     if (bubble) {
-      bubble.click();
-      console.log('[DF] bubble.click() ejecutado');
-    } else {
-      console.warn('[DF] bubble NO encontrado');
+      const ev = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+      bubble.dispatchEvent(ev);
     }
+
+    // 2) Fallback: click al botón real dentro del shadow DOM
+    setTimeout(() => {
+      try {
+        const sr = df.shadowRoot;
+        // Buscar algo clickeable (el botón flotante del widget)
+        const realBtn = sr && (sr.querySelector('button[aria-label], button, [role="button"]'));
+        if (realBtn) {
+          realBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, composed: true }));
+        }
+      } catch(e){}
+    }, 40);
+
+    // 3) Segundo intento por si estaba en animación
+    setTimeout(() => {
+      if (bubble) {
+        const ev2 = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+        bubble.dispatchEvent(ev2);
+      }
+    }, 120);
+
+    // Llevar arriba (opcional)
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    return false;
   }
 
   function wireButtons() {
     const btns = document.querySelectorAll('[data-open-chat]');
-    console.log('[DF] wireButtons -> encontrados', btns.length, 'botones');
     btns.forEach((btn) => {
-      btn.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        return openChat();
-      };
+      // Limpio handlers previos
+      if (btn.__openChatHandler) btn.removeEventListener('click', btn.__openChatHandler);
+      btn.__openChatHandler = (e) => { e.preventDefault(); e.stopPropagation(); reallyOpenChat(); };
+      btn.addEventListener('click', btn.__openChatHandler);
     });
   }
 
-  // Enganchar cuando el DOM está listo y cuando el widget carga
+  // Enganchar cuando el DOM está listo y cuando el widget termina de cargar
   document.addEventListener('DOMContentLoaded', wireButtons);
-  window.addEventListener('df-messenger-loaded', () => {
-    console.log('[DF] widget cargado');
-    wireButtons();
-  });
+  window.addEventListener('df-messenger-loaded', wireButtons);
 </script>
-
 
 
 </body>

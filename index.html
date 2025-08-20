@@ -11,39 +11,20 @@
   <meta property="og:image" content="assets/hero.jpg" />
   <link rel="icon" type="image/png" href="assets/favicon.png" />
 
-  <!-- Tailwind (rápido y suficiente para esta landing) -->
+  <!-- Tailwind (rápido para estilos) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Dialogflow CX Web Messenger (OFICIAL) -->
   <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
   <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
-
-  <!-- (Opcional) GA4 y Meta Pixel: pegá tus IDs y descomentá
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments)}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXX');
-  </script>
-  <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);
-    t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
-    }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'TU_PIXEL_ID');
-    fbq('track', 'PageView');
-  </script>
-  -->
 </head>
 <body class="bg-slate-50 text-slate-900">
   <!-- Header -->
   <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-slate-200">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3">
-        <img src="assets/logo.png" alt="Retiro Seguro" class="h-9 w-9 rounded-xl object-contain" />
-        <span class="font-semibold">Retiro Seguro</span>
+      <a href="#" class="flex items-center gap-2">
+        <img src="assets/logo.png" alt="Retiro Seguro" class="h-10 w-10 object-contain" />
+        <span class="text-lg font-bold tracking-tight text-indigo-700">Retiro Seguro</span>
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
         <a href="#que-es" class="hover:text-indigo-700">Qué es</a>
@@ -185,7 +166,7 @@
     © <span id="y"></span> Retiro Seguro — <a href="privacidad.html" class="underline">Privacidad</a> · <a href="terminos.html" class="underline">Términos</a>
   </footer>
 
-  <!-- Widget de Dialogflow CX (burbuja flotante) -->
+  <!-- Widget de Dialogflow CX -->
   <df-messenger
     location="us"
     project-id="chatbotprevencionretiro"
@@ -196,18 +177,36 @@
     <df-messenger-chat-bubble chat-title="BOT RETIRO"></df-messenger-chat-bubble>
   </df-messenger>
 
+  <!-- Forzamos visibilidad y z-index del widget -->
+  <style>
+    df-messenger{
+      position: fixed !important;
+      bottom: 16px !important;
+      right: 16px !important;
+      z-index: 2147483647 !important;
+      display: block !important;
+      opacity: 1 !important;
+    }
+  </style>
+
   <script>
     // Año del footer
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Abrir chat desde botones con data-open-chat
-    document.querySelectorAll('[data-open-chat]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const bubble = document.querySelector('df-messenger-chat-bubble');
-        if (bubble) bubble.click();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Enganchar los botones SOLO cuando el widget esté listo
+    window.addEventListener('df-messenger-loaded', () => {
+      document.querySelectorAll('[data-open-chat]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const bubble = document.querySelector('df-messenger-chat-bubble');
+          if (bubble) {
+            bubble.click();                 // toggle para abrir
+            setTimeout(() => bubble.click(), 0); // segundo toggle si estaba animando
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
       });
+      console.log('[DF] widget cargado');
     });
 
     // Smooth scroll en anclas internas

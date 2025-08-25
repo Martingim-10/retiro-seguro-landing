@@ -1,212 +1,245 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Retiro Seguro — Cotizá tu plan con nuestro asistente</title>
-  <meta name="description" content="Conocé cómo funcionan los seguros de retiro, mirá beneficios y cotizá tu plan en 1 minuto con nuestro asistente (burbuja de chat abajo a la derecha)." />
-  <meta name="theme-color" content="#4f46e5" />
-  <meta property="og:title" content="Retiro Seguro — Cotizá tu plan" />
-  <meta property="og:description" content="Abrí el chat y escribí “Quiero cotizar”. Obtené tu cotización en 1 minuto." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/hero.jpg" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Retiro Seguro — Cotizá tu plan con nuestro asistente</title>
+    <meta name="description" content="Conocé cómo funcionan los seguros de retiro, mirá beneficios y cotizá tu plan en 1 minuto con nuestro asistente (burbuja de chat abajo a la derecha)." />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta property="og:title" content="Retiro Seguro — Cotizá tu plan" />
+    <meta property="og:description" content="Abrí el chat y escribí “Quiero cotizar”. Obtené tu cotización en 1 minuto." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/hero.jpg" />
 
-  <style>
-    :root{
-      --indigo:#4f46e5; --indigo-700:#4338ca;
-      --bg:#f7fafc; --card:#ffffff; --muted:#475569; --text:#0f172a; --border:#e2e8f0;
-      --radius:16px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none}
-    img{display:block;max-width:100%;height:auto}
-    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 
-    /* Header */
-    header{
-      position:sticky;top:0;z-index:30;
-      background:rgba(255,255,255,.9);backdrop-filter:saturate(140%) blur(8px);
-      border-bottom:1px solid var(--border)
-    }
-    .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-    .brand{display:flex;align-items:center;gap:10px}
-    .brand img{width:64px;height:64px;object-fit:contain}
-    .brand strong{color:var(--indigo);font-weight:800;letter-spacing:.2px}
-    nav{display:none;gap:20px}
-    @media(min-width:820px){nav{display:flex}}
-    nav a{color:#374151} nav a:hover{color:var(--indigo)}
-
-    /* Hero */
-    .hero{padding:48px 0 20px}
-    .hero-grid{display:grid;gap:28px;grid-template-columns:1fr}
-    @media(min-width:960px){.hero-grid{grid-template-columns:1.05fr .95fr}}
-    h1{font-size:clamp(28px,5vw,48px);line-height:1.08;margin:0 0 8px;font-weight:900;letter-spacing:.2px}
-    .lead{color:#334155;font-size:18px;margin:10px 0 0}
-    .note{
-      margin-top:16px; font-size:15px; color:#1f2937;
-      display:flex;gap:10px;align-items:flex-start;
-      background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:10px 12px
-    }
-    .hero-media{
-      border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#fff;
-    }
-    .hero-media img{width:100%;height:100%;object-fit:cover;aspect-ratio:3/2}
-
-    /* Secciones */
-    section{padding:34px 0}
-    h2{font-size:26px;margin:0 0 12px}
-    .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
-    .grid{display:grid;gap:16px}
-    @media(min-width:900px){.grid-3{grid-template-columns:repeat(3,1fr)} .grid-2{grid-template-columns:repeat(2,1fr)}}
-    .card{background:#ffffff;border:1px solid var(--border);border-radius:14px;padding:18px}
-    .muted{color:var(--muted)}
-
-    /* Footer */
-    footer{border-top:1px solid var(--border);text-align:center;color:#64748b;padding:24px 0;font-size:14px}
-    .link{color:#4f46e5;text-decoration:underline} .link:hover{color:#4338ca}
-
-    /* Burbuja del bot siempre arriba */
-    df-messenger{
-      position:fixed !important; bottom:16px !important; right:16px !important;
-      z-index:2147483647 !important; display:block !important; opacity:1 !important;
-    }
-  </style>
-
-  <!-- Dialogflow CX Web Messenger (oficial) -->
-  <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
-  <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
+    <style>
+        :root{
+            /* Paleta de colores más rica */
+            --indigo:#4f46e5;
+            --indigo-700:#4338ca;
+            --bg:#f7fafc;
+            --card:#ffffff;
+            --muted:#475569;
+            --text:#0f172a;
+            --border:#e2e8f0;
+            --accent-1:#ff7e5f;
+            --accent-2:#feb47b;
+            --gradient: linear-gradient(45deg, var(--indigo-700), var(--accent-1));
+            --radius:16px;
+        }
+        *{box-sizing:border-box}
+        html,body{
+            margin:0;padding:0;
+            font-family: 'Montserrat', system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            background:var(--bg);color:var(--text);
+        }
+        a{color:inherit;text-decoration:none}
+        img{display:block;max-width:100%;height:auto}
+        .container{max-width:1100px;margin:0 auto;padding:0 16px}
+        
+        /* Header */
+        header{
+            position:sticky;top:0;z-index:30;
+            background:rgba(255,255,255,.9);backdrop-filter:saturate(140%) blur(8px);
+            border-bottom:1px solid var(--border);
+        }
+        .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+        .brand{display:flex;align-items:center;gap:10px}
+        .brand img{width:64px;height:64px;object-fit:contain}
+        .brand strong{color:var(--indigo);font-weight:900;letter-spacing:.2px}
+        nav{display:none;gap:20px}
+        @media(min-width:820px){nav{display:flex}}
+        nav a{color:#374151; transition: color 0.3s ease;}
+        nav a:hover{color:var(--indigo)}
+        
+        /* Hero */
+        .hero{padding:80px 0 40px} /* Mayor espaciado */
+        .hero-grid{display:grid;gap:40px;grid-template-columns:1fr} /* Mayor separación */
+        @media(min-width:960px){.hero-grid{grid-template-columns:1.05fr .95fr}}
+        h1{
+            font-size:clamp(28px,5vw,48px);line-height:1.08;
+            margin:0 0 8px;
+            font-weight:900;letter-spacing:.2px
+        }
+        h2, h3{
+            font-weight:700;
+        }
+        .lead{color:#334155;font-size:18px;margin:10px 0 0}
+        .note{
+            margin-top:16px; font-size:15px; color:#1f2937;
+            display:flex;gap:10px;align-items:flex-start;
+            background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:10px 12px
+        }
+        .hero-media{
+            border-radius:var(--radius);overflow:hidden;
+            border:1px solid var(--border);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            background:#fff;
+        }
+        .hero-media img{width:100%;height:100%;object-fit:cover;aspect-ratio:3/2}
+        
+        /* Secciones */
+        section{padding:60px 0} /* Más espaciado vertical */
+        h2{font-size:26px;margin:0 0 12px}
+        .panel{
+            background:var(--card);border:1px solid var(--border);
+            border-radius:var(--radius);padding:22px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+        .grid{display:grid;gap:24px} /* Mayor separación entre tarjetas */
+        @media(min-width:900px){.grid-3{grid-template-columns:repeat(3,1fr)} .grid-2{grid-template-columns:repeat(2,1fr)}}
+        .card{
+            background:#ffffff;border:1px solid var(--border);
+            border-radius:14px;padding:24px; /* Mayor relleno */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .muted{color:var(--muted)}
+        
+        /* Footer */
+        footer{border-top:1px solid var(--border);text-align:center;color:#64748b;padding:24px 0;font-size:14px}
+        .link{color:#4f46e5;text-decoration:underline} .link:hover{color:#4338ca}
+        
+        /* Burbuja del bot siempre arriba */
+        df-messenger{
+            position:fixed !important; bottom:16px !important; right:16px !important;
+            z-index:2147483647 !important; display:block !important; opacity:1 !important;
+        }
+    </style>
+    
+    <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+    <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container bar">
-      <a href="#" class="brand">
-        <img src="assets/logo.png" alt="Retiro Seguro">
-        <strong>Retiro Seguro</strong>
-      </a>
-      <nav aria-label="Principal">
-        <a href="#que-es">Qué es</a>
-        <a href="#beneficios">Beneficios</a>
-        <a href="#planes">Planes</a>
-        <a href="#como">Cómo funciona</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero (texto igual que antes + imagen a la derecha) -->
- <section class="hero">
-  <div class="container hero-grid">
-    <div>
-      <h1>Planificá hoy tu retiro.<br>Disfrutá tranquilo mañana.</h1>
-      <p class="lead">
-        Conocé cómo funcionan los seguros de retiro, mirá nuestros planes y
-        <strong> cotizá tu plan </strong> en 1 minuto con nuestro asistente.
-      </p>
-      <div class="note">💬
-        <span>Para <strong>cotizar ahora</strong>, abrí la <strong>burbuja del chat</strong> (abajo a la derecha) y escribí: <em>“Quiero cotizar”</em>.</span>
-      </div>
-      <p style="margin-top:10px;color:#64748b;font-size:14px">
-        ¿Preferís WhatsApp?
-        <a href="https://wa.me/549TU_NUMERO?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20seguros%20de%20retiro" class="link">Escribinos</a>.
-      </p>
-    </div>
-    <figure class="hero-media">
-      <img src="assets/hero.jpg" alt="Personas mayores disfrutando de su retiro">
-    </figure>
-  </div>
-</section>
-  <!-- Qué es -->
-  <section id="que-es">
-    <div class="container">
-      <div class="panel">
-        <h2>¿Qué es un seguro de retiro?</h2>
-        <p class="muted">
-          Es una herramienta de <strong>ahorro e inversión a largo plazo</strong> para construir un capital que puedas usar al jubilarte o para metas importantes.
-          Podés realizar <strong>aportes periódicos o extraordinarios</strong>, que se invierten para generar rendimientos. Además, los aportes son
-          <strong>deducibles del Impuesto a las Ganancias</strong> según normativa vigente.
-        </p>
-        <div class="grid grid-3" style="margin-top:14px">
-          <div class="card">📆 Aportes flexibles (mensuales y/o extraordinarios)</div>
-          <div class="card">🔓 Disponibilidad: rescates parciales o totales</div>
-          <div class="card">🧾 Beneficio impositivo en Ganancias</div>
+    <header>
+        <div class="container bar">
+            <a href="#" class="brand">
+                <img src="assets/logo.png" alt="Retiro Seguro">
+                <strong>Retiro Seguro</strong>
+            </a>
+            <nav aria-label="Principal">
+                <a href="#que-es">Qué es</a>
+                <a href="#beneficios">Beneficios</a>
+                <a href="#planes">Planes</a>
+                <a href="#como">Cómo funciona</a>
+            </nav>
         </div>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- Beneficios -->
-  <section id="beneficios">
-    <div class="container">
-      <h2>Beneficios clave</h2>
-      <div class="grid grid-3" style="margin-top:12px">
-        <div class="card"><div style="font-size:20px">💸</div><strong>Deducción de Ganancias</strong><p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p></div>
-        <div class="card"><div style="font-size:20px">📈</div><strong>Crecimiento en el tiempo</strong><p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p></div>
-        <div class="card"><div style="font-size:20px">✅</div><strong>Flexibilidad real</strong><p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Planes -->
-  <section id="planes">
-    <div class="container">
-      <h2>Nuestros planes</h2>
-      <div class="grid grid-2" style="margin-top:12px">
-        <div class="panel">
-          <h3 style="margin:0 0 6px">Plan Individual</h3>
-          <p class="muted">Para quienes desean complementar su jubilación con un ahorro a medida.</p>
-          <ul class="muted" style="padding-left:18px;line-height:1.7">
-            <li>Aportes mensuales + refuerzos</li>
-            <li>Proyección de capital y objetivos</li>
-            <li>Flexibilidad para modificar aportes</li>
-          </ul>
+    <section class="hero">
+        <div class="container hero-grid">
+            <div>
+                <h1>Planificá hoy tu retiro.<br>Disfrutá tranquilo mañana.</h1>
+                <p class="lead">
+                    Conocé cómo funcionan los seguros de retiro, mirá nuestros planes y
+                    <strong> cotizá tu plan </strong> en 1 minuto con nuestro asistente.
+                </p>
+                <div class="note">💬
+                    <span>Para <strong>cotizar ahora</strong>, abrí la <strong>burbuja del chat</strong> (abajo a la derecha) y escribí: <em>“Quiero cotizar”</em>.</span>
+                </div>
+                <p style="margin-top:10px;color:#64748b;font-size:14px">
+                    ¿Preferís WhatsApp?
+                    <a href="https://wa.me/549TU_NUMERO?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20seguros%20de%20retiro" class="link">Escribinos</a>.
+                </p>
+            </div>
+            <figure class="hero-media">
+                <img src="assets/hero.jpg" alt="Personas mayores disfrutando de su retiro">
+            </figure>
         </div>
-        <div class="panel">
-          <h3 style="margin:0 0 6px">Plan Colectivo (Empresas)</h3>
-          <p class="muted">Una solución para organizaciones que ofrecen un beneficio diferencial a su equipo.</p>
-          <ul class="muted" style="padding-left:18px;line-height:1.7">
-            <li>Aportes corporativos y/o del empleado</li>
-            <li>Retención y motivación del talento</li>
-            <li>Gestión simple y transparente</li>
-          </ul>
+    </section>
+
+    <section id="que-es">
+        <div class="container">
+            <div class="panel">
+                <h2>¿Qué es un seguro de retiro?</h2>
+                <p class="muted">
+                    Es una herramienta de <strong>ahorro e inversión a largo plazo</strong> para construir un capital que puedas usar al jubilarte o para metas importantes.
+                    Podés realizar <strong>aportes periódicos o extraordinarios</strong>, que se invierten para generar rendimientos. Además, los aportes son
+                    <strong>deducibles del Impuesto a las Ganancias</strong> según normativa vigente.
+                </p>
+                <div class="grid grid-3" style="margin-top:14px">
+                    <div class="card">📆 Aportes flexibles (mensuales y/o extraordinarios)</div>
+                    <div class="card">🔓 Disponibilidad: rescates parciales o totales</div>
+                    <div class="card">🧾 Beneficio impositivo en Ganancias</div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Cómo funciona -->
-  <section id="como">
-    <div class="container">
-      <h2>Cómo funciona</h2>
-      <div class="grid grid-3" style="margin-top:12px">
-        <div class="card"><div style="font-size:20px">1️⃣</div><strong>Contanos tu perfil</strong><p class="muted" style="margin-top:6px">Edad, aporte deseado y edad de retiro.</p></div>
-        <div class="card"><div style="font-size:20px">2️⃣</div><strong>Obtené tu cotización</strong><p class="muted" style="margin-top:6px">El asistente la genera al instante.</p></div>
-        <div class="card"><div style="font-size:20px">3️⃣</div><strong>Elegí cómo avanzar</strong><p class="muted" style="margin-top:6px">Seguimos por chat, WhatsApp o te contacta un asesor.</p></div>
-      </div>
-      <div class="panel" style="margin-top:14px">
-        <strong>Recordatorio:</strong> Para iniciar, abrí el chat y escribí <em>“Quiero cotizar”</em>.
-      </div>
-    </div>
-  </section>
+    <section id="beneficios">
+        <div class="container">
+            <h2>Beneficios clave</h2>
+            <div class="grid grid-3" style="margin-top:12px">
+                <div class="card"><div>💸</div><strong>Deducción de Ganancias</strong><p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p></div>
+                <div class="card"><div>📈</div><strong>Crecimiento en el tiempo</strong><p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p></div>
+                <div class="card"><div>✅</div><strong>Flexibilidad real</strong><p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p></div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Footer -->
-  <footer>
-    © <span id="y"></span> Retiro Seguro — <a class="link" href="privacidad.html">Privacidad</a> · <a class="link" href="terminos.html">Términos</a>
-  </footer>
+    <section id="planes">
+        <div class="container">
+            <h2>Nuestros planes</h2>
+            <div class="grid grid-2" style="margin-top:12px">
+                <div class="panel">
+                    <h3 style="margin:0 0 6px">Plan Individual</h3>
+                    <p class="muted">Para quienes desean complementar su jubilación con un ahorro a medida.</p>
+                    <ul class="muted" style="padding-left:18px;line-height:1.7">
+                        <li>Aportes mensuales + refuerzos</li>
+                        <li>Proyección de capital y objetivos</li>
+                        <li>Flexibilidad para modificar aportes</li>
+                    </ul>
+                </div>
+                <div class="panel">
+                    <h3 style="margin:0 0 6px">Plan Colectivo (Empresas)</h3>
+                    <p class="muted">Una solución para organizaciones que ofrecen un beneficio diferencial a su equipo.</p>
+                    <ul class="muted" style="padding-left:18px;line-height:1.7">
+                        <li>Aportes corporativos y/o del empleado</li>
+                        <li>Retención y motivación del talento</li>
+                        <li>Gestión simple y transparente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Dialogflow CX (burbuja flotante) -->
-  <df-messenger
-    location="us"
-    project-id="chatbotprevencionretiro"
-    agent-id="27aae0fd-56e8-43e5-9f7c-5ffc6f132462"
-    environment="draft"
-    language-code="es"
-    max-query-length="-1">
-    <df-messenger-chat-bubble chat-title="BOT RETIRO"></df-messenger-chat-bubble>
-  </df-messenger>
+    <section id="como">
+        <div class="container">
+            <h2>Cómo funciona</h2>
+            <div class="grid grid-3" style="margin-top:12px">
+                <div class="card"><div>1️⃣</div><strong>Contanos tu perfil</strong><p class="muted" style="margin-top:6px">Edad, aporte deseado y edad de retiro.</p></div>
+                <div class="card"><div>2️⃣</div><strong>Obtené tu cotización</strong><p class="muted" style="margin-top:6px">El asistente la genera al instante.</p></div>
+                <div class="card"><div>3️⃣</div><strong>Elegí cómo avanzar</strong><p class="muted" style="margin-top:6px">Seguimos por chat, WhatsApp o te contacta un asesor.</p></div>
+            </div>
+            <div class="panel" style="margin-top:14px">
+                <strong>Recordatorio:</strong> Para iniciar, abrí el chat y escribí <em>“Quiero cotizar”</em>.
+            </div>
+        </div>
+    </section>
 
-  <script>
-    const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear();
-  </script>
+    <footer>
+        © <span id="y"></span> Retiro Seguro — <a class="link" href="privacidad.html">Privacidad</a> · <a class="link" href="terminos.html">Términos</a>
+    </footer>
+
+    <df-messenger
+        location="us"
+        project-id="chatbotprevencionretiro"
+        agent-id="27aae0fd-56e8-43e5-9f7c-5ffc6f132462"
+        environment="draft"
+        language-code="es"
+        max-query-length="-1">
+        <df-messenger-chat-bubble chat-title="BOT RETIRO"></df-messenger-chat-bubble>
+    </df-messenger>
+
+    <script>
+        const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>

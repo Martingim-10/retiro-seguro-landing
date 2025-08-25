@@ -188,7 +188,7 @@
                 <div class="note">💬
                     <span>Para <strong>cotizar ahora</strong>, abrí la <strong>burbuja del chat</strong> (abajo a la derecha) y escribí: <em>“Quiero cotizar”</em>.</span>
                 </div>
-                <a href="javascript:void(0)" id="abrirChatBtn" class="link">
+                <a href="javascript:void(0)" id="abrirChatBtn">
                     ¡Cotizar ahora!
                 </a>
                 <p style="margin-top:20px;color:#64748b;font-size:14px">
@@ -305,16 +305,16 @@
     <script>
         const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear();
 
-        // Script para abrir el chat de Dialogflow al hacer clic en un botón
+        // Código para abrir el chat de Dialogflow
         document.addEventListener('DOMContentLoaded', () => {
-            const chatButton = document.getElementById('abrirChatBtn');
-            const dfMessenger = document.querySelector('df-messenger');
+          const chatButton = document.getElementById('abrirChatBtn');
+          const dfMessenger = document.querySelector('df-messenger');
 
-            if (chatButton && dfMessenger) {
-                chatButton.addEventListener('click', () => {
-                    dfMessenger.setAttribute('expand', 'true');
-                });
-            }
+          if (chatButton && dfMessenger) {
+            chatButton.addEventListener('click', () => {
+              dfMessenger.setAttribute('expand', 'true');
+            });
+          }
         });
     </script>
 </body>

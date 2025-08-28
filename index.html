@@ -60,25 +60,13 @@
       background: #fff;
       aspect-ratio: 3/2;
     }
-    .hero-media img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .hero-media img{width:100%;height:100%;object-fit:cover}
     .hero-caption{
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      padding: 16px 18px;
-      color: #fff;
-      font-weight: 800;
-      line-height: 1.2;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.55) 90%);
-      text-shadow: 0 2px 14px rgba(0,0,0,.45);
-      font-size: clamp(18px, 2.6vw, 28px);
+      position:absolute;left:0;right:0;bottom:0;padding:16px 18px;color:#fff;font-weight:800;line-height:1.2;
+      background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 90%);text-shadow:0 2px 14px rgba(0,0,0,.45);
+      font-size:clamp(18px,2.6vw,28px)
     }
-    @media (max-width: 640px){
-      .hero-caption{ text-align:center; padding:14px }
-    }
+    @media (max-width:640px){.hero-caption{text-align:center;padding:14px}}
 
     /* Secciones */
     section{padding:60px 0}
@@ -144,8 +132,16 @@
           <a href="https://wa.me/5492804641495?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20seguros%20de%20retiro" class="link">Escribinos</a>.
         </p>
       </div>
+
+      <!-- HERO con fallback -->
       <figure class="hero-media">
-        <img src="assets/hero-playa.jpg" alt="Personas retiradas disfrutando en una playa paradisíaca">
+        <img
+          id="heroImg"
+          src="assets/hero-playa.jpg?v=1"
+          alt="Personas retiradas disfrutando en una playa paradisíaca"
+          width="1200" height="800"
+          onerror="this.onerror=null; this.src='assets/hero.png?v=1'; this.alt='Personas mayores disfrutando de su retiro';"
+        >
         <figcaption class="hero-caption">
           Pasarla bien en el futuro es una decisión.
         </figcaption>
@@ -153,12 +149,108 @@
     </div>
   </section>
 
-  <!-- ... (resto de secciones igual que antes: que-es, beneficios, planes, como) ... -->
+  <!-- QUÉ ES -->
+  <section id="que-es">
+    <div class="container">
+      <div class="panel">
+        <h2>¿Qué es un seguro de retiro?</h2>
+        <p class="muted">
+          Es una herramienta de <strong>ahorro e inversión a largo plazo</strong> para construir un capital que puedas usar al jubilarte o para metas importantes.
+          Podés realizar <strong>aportes periódicos o extraordinarios</strong>, que se invierten para generar rendimientos. Además, los aportes son
+          <strong>deducibles del Impuesto a las Ganancias</strong> según normativa vigente.
+        </p>
+        <div class="grid grid-3" style="margin-top:14px">
+          <div class="card">📆 Aportes flexibles (mensuales y/o extraordinarios)</div>
+          <div class="card">🔓 Disponibilidad: rescates parciales o totales</div>
+          <div class="card">🧾 Beneficio impositivo en Ganancias</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section id="beneficios">
+    <div class="container">
+      <h2>Beneficios clave</h2>
+      <div class="grid grid-3" style="margin-top:12px">
+        <div class="card">
+          <span class="icon" data-heroicon-name="currency-dollar"></span>
+          <strong>Deducción de Ganancias</strong>
+          <p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p>
+        </div>
+        <div class="card">
+          <span class="icon" data-heroicon-name="chart-line"></span>
+          <strong>Crecimiento en el tiempo</strong>
+          <p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p>
+        </div>
+        <div class="card">
+          <span class="icon" data-heroicon-name="check-circle"></span>
+          <strong>Flexibilidad real</strong>
+          <p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANES -->
+  <section id="planes">
+    <div class="container">
+      <h2>Nuestros planes</h2>
+      <div class="grid grid-2" style="margin-top:12px">
+        <div class="panel">
+          <h3 style="margin:0 0 6px">Plan Individual</h3>
+          <p class="muted">Para quienes desean complementar su jubilación con un ahorro a medida.</p>
+          <ul class="muted" style="padding-left:18px;line-height:1.7">
+            <li>Aportes mensuales + refuerzos</li>
+            <li>Proyección de capital y objetivos</li>
+            <li>Flexibilidad para modificar aportes</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3 style="margin:0 0 6px">Plan Colectivo (Empresas)</h3>
+          <p class="muted">Una solución para organizaciones que ofrecen un beneficio diferencial a su equipo.</p>
+          <ul class="muted" style="padding-left:18px;line-height:1.7">
+            <li>Aportes corporativos y/o del empleado</li>
+            <li>Retención y motivación del talento</li>
+            <li>Gestión simple y transparente</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section id="como">
+    <div class="container">
+      <h2>Cómo funciona</h2>
+      <div class="grid grid-3" style="margin-top:12px">
+        <div class="card">
+          <span class="icon" data-heroicon-name="chat-bubble-left-right"></span>
+          <strong>Contanos tu perfil</strong>
+          <p class="muted" style="margin-top:6px">Edad, aporte deseado y edad de retiro.</p>
+        </div>
+        <div class="card">
+          <span class="icon" data-heroicon-name="calculator"></span>
+          <strong>Obtené tu cotización</strong>
+          <p class="muted" style="margin-top:6px">El asistente la genera al instante.</p>
+        </div>
+        <div class="card">
+          <span class="icon" data-heroicon-name="arrow-path-rounded-square"></span>
+          <strong>Elegí cómo avanzar</strong>
+          <p class="muted" style="margin-top:6px">Seguimos por chat, WhatsApp o te contacta un asesor.</p>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <strong>Recordatorio:</strong> Para iniciar, abrí el chat y escribí <em>“Quiero cotizar”</em>.
+      </div>
+    </div>
+  </section>
 
   <footer>
     © <span id="y"></span> Retiro Seguro — <a class="link" href="privacidad.html">Privacidad</a> · <a class="link" href="terminos.html">Términos</a>
   </footer>
 
+  <!-- Dialogflow Messenger -->
   <df-messenger
     location="us"
     project-id="chatbotprevencionretiro"
@@ -175,9 +267,7 @@
       const chatButton = document.getElementById('abrirChatBtn');
       const dfMessenger = document.querySelector('df-messenger');
       if (chatButton && dfMessenger) {
-        chatButton.addEventListener('click', () => {
-          dfMessenger.setAttribute('expand', 'true');
-        });
+        chatButton.addEventListener('click', () => dfMessenger.setAttribute('expand', 'true'));
       }
     });
   </script>

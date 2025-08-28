@@ -118,8 +118,20 @@
         </p>
       </div>
       <figure class="hero-media">
-        <img src="assets/hero.png" alt="Personas mayores disfrutando de su retiro">
-      </figure>
+  <picture>
+    <!-- si más adelante subís versiones modernas, descomentalas -->
+    <!-- <source srcset="assets/hero.avif?v=2" type="image/avif"> -->
+    <!-- <source srcset="assets/hero.webp?v=2" type="image/webp"> -->
+    <img
+      src="assets/hero.png?v=2"
+      alt="Personas mayores disfrutando de su retiro"
+      width="1200" height="800"
+      style="display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:#eef2ff"
+      onerror="this.src='assets/hero.jpg?v=2'; this.onerror=null;"
+    >
+  </picture>
+</figure>
+
     </div>
   </section>
 

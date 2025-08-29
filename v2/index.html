@@ -172,21 +172,9 @@
     <div class="container">
       <h2>Beneficios clave</h2>
       <div class="grid grid-3" style="margin-top:12px">
-        <div class="card">
-          <span class="icon">💸</span>
-          <strong>Deducción de Ganancias</strong>
-          <p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p>
-        </div>
-        <div class="card">
-          <span class="icon">📈</span>
-          <strong>Crecimiento en el tiempo</strong>
-          <p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p>
-        </div>
-        <div class="card">
-          <span class="icon">✅</span>
-          <strong>Flexibilidad real</strong>
-          <p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p>
-        </div>
+        <div class="card"><span class="icon">💸</span><strong>Deducción de Ganancias</strong><p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p></div>
+        <div class="card"><span class="icon">📈</span><strong>Crecimiento en el tiempo</strong><p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p></div>
+        <div class="card"><span class="icon">✅</span><strong>Flexibilidad real</strong><p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p></div>
       </div>
     </div>
   </section>
@@ -305,7 +293,7 @@
       }
     })();
 
-    // === Calculadora: misma lógica que Cloud Function / Dialogflow ===
+    // === Calculadora: misma lógica que tu Cloud Function / Dialogflow ===
     const fmtARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
     function calcularValorAcumulado(aporte, meses, rendimientoAnual){
@@ -337,3 +325,83 @@
       if (isNaN(aporte) || isNaN(edad) || isNaN(retiro)) {
         e.textContent = "Valores inválidos. Ingresá solo cifras para montos y edades.";
         e.style.display = 'block'; return;
+      }
+      const anios = retiro - edad;
+      const meses = anios * 12;
+      if (anios <= 0) { e.textContent = "La edad de retiro debe ser mayor a la actual."; e.style.display = 'block'; return; }
+      if (aporte <= 0) { e.textContent = "El aporte mensual debe ser mayor a cero."; e.style.display = 'block'; return; }
+
+      const T1 = 0.159;   // 15.9%
+      const T2 = 0.44;    // 44%
+
+      const v1 = calcularValorAcumulado(aporte, meses, T1);
+      const v2 = calcularValorAcumulado(aporte, meses, T2);
+
+      const intro = `¡Excelente! Con un aporte de ${fmtARS.format(aporte)} por mes, y proyectando tu retiro a los ${retiro} años, aquí tenés dos escenarios:`;
+      document.getElementById('intro').textContent = intro;
+      document.getElementById('esc1').textContent = `≈ ${fmtARS.format(v1)}`;
+      document.getElementById('esc2').textContent = `≈ ${fmtARS.format(v2)}`;
+
+      // Armar resumen para enviar (gancho)
+      const resumen =
+`Resumen de simulación:
+- Edad actual: ${edad}
+- Edad retiro: ${retiro}
+- Aporte mensual: ${fmtARS.format(aporte)}
+- Escenario 1 (15,9%): ${fmtARS.format(v1)}
+- Escenario 2 (44%): ${fmtARS.format(v2)}`;
+
+      // WhatsApp (tu número)
+      const wpp = document.getElementById('cta-wpp');
+      const tel = '5492804641495'; // <- tu número (si cambia, actualizalo)
+      wpp.href = `https://wa.me/${tel}?text=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.' )}`;
+
+      // Email
+      const mail = document.getElementById('cta-mail');
+      const mailto = 'retiroseguro.plan@gmail.com';
+      mail.href = `mailto:${mailto}?subject=${encodeURIComponent('Cotización de retiro')}&body=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.')}`;
+
+      // Mostrar CTAs
+      document.getElementById('post-cta').style.display = 'flex';
+
+      // Scroll al resultado
+      document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Evento de completado
+      track('CalcCompleted', {
+        aporte_mensual: aporte,
+        edad_actual: edad,
+        edad_retiro: retiro,
+        escenario1: Math.round(v1),
+        escenario2: Math.round(v2)
+      });
+
+      // Guardar inputs
+      try { localStorage.setItem('rs_calc', JSON.stringify({ aporte, edad, retiro })); } catch {}
+    }
+
+    // ✅ listeners (aseguramos que el botón funcione)
+    document.getElementById('btn-calcular').addEventListener('click', calc);
+    document.getElementById('btn-limpiar').addEventListener('click', () => {
+      document.getElementById('intro').textContent = 'Ingresá los datos y presioná “Calcular”.';
+      document.getElementById('esc1').textContent = '—';
+      document.getElementById('esc2').textContent = '—';
+      document.getElementById('post-cta').style.display = 'none';
+      const e = document.getElementById('calc-error'); e.style.display = 'none'; e.textContent = '';
+    });
+
+    // Restaurar valores si existen
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = localStorage.getItem('rs_calc');
+        if (raw) {
+          const d = JSON.parse(raw);
+          if (d && d.aporte) document.getElementById('aporte').value = d.aporte;
+          if (d && d.edad) document.getElementById('edad-actual').value = d.edad;
+          if (d && d.retiro) document.getElementById('edad-retiro').value = d.retiro;
+        }
+      } catch {}
+    });
+  </script>
+</body>
+</html>

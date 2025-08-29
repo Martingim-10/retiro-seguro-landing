@@ -98,6 +98,33 @@
     /* Footer */
     footer{border-top:1px solid var(--border);text-align:center;color:#64748b;padding:24px 0;font-size:14px}
     .link{color:#4f46e5;text-decoration:underline}.link:hover{color:#4338ca}
+
+    /* === Chat nativo === */
+    #chatFab{
+      position:fixed; right:24px; bottom:24px; z-index:9999;
+      padding:12px 16px; border-radius:9999px; border:1px solid var(--border);
+      background:var(--card); color:#111827; font-weight:800; cursor:pointer;
+      box-shadow:0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+    }
+    #chatFab:hover{ transform:translateY(-2px); }
+    #chatPanel{
+      position:fixed; right:24px; bottom:92px; width:min(360px,calc(100% - 48px));
+      background:#fff; border:1px solid var(--border); border-radius:16px; z-index:9998;
+      box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04);
+      display:none; overflow:hidden;
+    }
+    .chat-header{
+      padding:12px 14px; background:var(--indigo); color:#fff; font-weight:800; display:flex; justify-content:space-between; align-items:center;
+    }
+    .chat-body{ padding:12px; display:grid; gap:10px; }
+    .chat-msg{
+      width:100%; min-height:80px; padding:10px 12px; font:inherit;
+      border:1px solid var(--border); border-radius:12px; resize:vertical;
+    }
+    .chat-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .chat-input{ display:grid; gap:8px; }
+    .chat-note{ font-size:12px; color:#64748b; }
+    .chat-close{ background:transparent; color:#fff; border:none; font-size:18px; cursor:pointer; }
   </style>
 </head>
 
@@ -271,6 +298,26 @@
     © <span id="y"></span> Retiro Seguro — <a class="link" href="../privacidad.html">Privacidad</a> · <a class="link" href="../terminos.html">Términos</a>
   </footer>
 
+  <!-- Chat nativo -->
+  <button id="chatFab" aria-label="Abrir chat">¿Dudas? Chateá</button>
+  <div id="chatPanel" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="chat-header">
+      <div id="chatTitle">Asesor en línea</div>
+      <button class="chat-close" aria-label="Cerrar" id="chatClose">×</button>
+    </div>
+    <div class="chat-body">
+      <div class="chat-input">
+        <textarea id="chatMsg" class="chat-msg" placeholder="Escribí tu consulta…"></textarea>
+        <div class="chat-note">Tip: si ya simulaste, tu último resultado se adjunta automáticamente al mensaje.</div>
+      </div>
+      <div class="chat-actions">
+        <button id="chatSendWpp" class="cta">Enviar por WhatsApp</button>
+        <button id="chatSendEmail" class="cta ghost">Enviar por Email</button>
+      </div>
+      <div class="chat-note">No pedimos datos personales para escribirnos.</div>
+    </div>
+  </div>
+
   <script>
     // Año en footer
     const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear();
@@ -293,22 +340,46 @@
       }
     })();
 
-    // === Calculadora: misma lógica que tu Cloud Function / Dialogflow ===
+    // === Calculadora (misma lógica) ===
     const fmtARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
     function calcularValorAcumulado(aporte, meses, rendimientoAnual){
-      const r = rendimientoAnual / 12;   // mensual nominal simple
+      const r = rendimientoAnual / 12;
       let valor = 0;
       for (let i = 0; i < meses; i++) {
-        valor = (valor + aporte) * (1 + r);  // aporte al inicio (annuity due)
+        valor = (valor + aporte) * (1 + r);
       }
       return valor;
     }
 
-    // Tracking helper: GA4 (si gtag no está, no rompe)
     function track(eventName, params){
       try { if (window.gtag) gtag('event', eventName, params); } catch {}
       try { console.log('[track]', eventName, params); } catch {}
+    }
+
+    function buildResumenFromInputs(aporte, edad, retiro, v1, v2){
+      return `Resumen de simulación:
+- Edad actual: ${edad}
+- Edad retiro: ${retiro}
+- Aporte mensual: ${fmtARS.format(aporte)}
+- Escenario 1 (15,9%): ${fmtARS.format(v1)}
+- Escenario 2 (44%): ${fmtARS.format(v2)}`;
+    }
+
+    function lastSimSummary(){
+      try {
+        const raw = localStorage.getItem('rs_calc');
+        if (!raw) return '';
+        const d = JSON.parse(raw);
+        if (!d) return '';
+        const T1 = 0.159, T2 = 0.44;
+        const anios = (d.retiro - d.edad);
+        if (isNaN(anios) || anios <= 0 || isNaN(d.aporte)) return '';
+        const meses = anios * 12;
+        const v1 = calcularValorAcumulado(d.aporte, meses, T1);
+        const v2 = calcularValorAcumulado(d.aporte, meses, T2);
+        return buildResumenFromInputs(d.aporte, d.edad, d.retiro, v1, v2);
+      } catch { return ''; }
     }
 
     function calc(){
@@ -319,7 +390,6 @@
       const edad = parseFloat(document.getElementById('edad-actual').value);
       const retiro = parseFloat(document.getElementById('edad-retiro').value);
 
-      // Evento de inicio
       track('CalcStart', { aporte_mensual: aporte, edad_actual: edad, edad_retiro: retiro });
 
       if (isNaN(aporte) || isNaN(edad) || isNaN(retiro)) {
@@ -331,8 +401,7 @@
       if (anios <= 0) { e.textContent = "La edad de retiro debe ser mayor a la actual."; e.style.display = 'block'; return; }
       if (aporte <= 0) { e.textContent = "El aporte mensual debe ser mayor a cero."; e.style.display = 'block'; return; }
 
-      const T1 = 0.159;   // 15.9%
-      const T2 = 0.44;    // 44%
+      const T1 = 0.159, T2 = 0.44;
 
       const v1 = calcularValorAcumulado(aporte, meses, T1);
       const v2 = calcularValorAcumulado(aporte, meses, T2);
@@ -342,32 +411,20 @@
       document.getElementById('esc1').textContent = `≈ ${fmtARS.format(v1)}`;
       document.getElementById('esc2').textContent = `≈ ${fmtARS.format(v2)}`;
 
-      // Armar resumen para enviar (gancho)
-      const resumen =
-`Resumen de simulación:
-- Edad actual: ${edad}
-- Edad retiro: ${retiro}
-- Aporte mensual: ${fmtARS.format(aporte)}
-- Escenario 1 (15,9%): ${fmtARS.format(v1)}
-- Escenario 2 (44%): ${fmtARS.format(v2)}`;
+      // WhatsApp / Email con resumen
+      const resumen = buildResumenFromInputs(aporte, edad, retiro, v1, v2);
+      const tel = '5492804641495';
+      const mailto = 'retiroseguro.plan@gmail.com';
 
-      // WhatsApp (tu número)
       const wpp = document.getElementById('cta-wpp');
-      const tel = '5492804641495'; // <- tu número (si cambia, actualizalo)
       wpp.href = `https://wa.me/${tel}?text=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.' )}`;
 
-      // Email
       const mail = document.getElementById('cta-mail');
-      const mailto = 'retiroseguro.plan@gmail.com';
       mail.href = `mailto:${mailto}?subject=${encodeURIComponent('Cotización de retiro')}&body=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.')}`;
 
-      // Mostrar CTAs
       document.getElementById('post-cta').style.display = 'flex';
-
-      // Scroll al resultado
       document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Evento de completado
       track('CalcCompleted', {
         aporte_mensual: aporte,
         edad_actual: edad,
@@ -376,11 +433,9 @@
         escenario2: Math.round(v2)
       });
 
-      // Guardar inputs
       try { localStorage.setItem('rs_calc', JSON.stringify({ aporte, edad, retiro })); } catch {}
     }
 
-    // ✅ listeners (aseguramos que el botón funcione)
     document.getElementById('btn-calcular').addEventListener('click', calc);
     document.getElementById('btn-limpiar').addEventListener('click', () => {
       document.getElementById('intro').textContent = 'Ingresá los datos y presioná “Calcular”.';
@@ -401,6 +456,43 @@
           if (d && d.retiro) document.getElementById('edad-retiro').value = d.retiro;
         }
       } catch {}
+    });
+
+    // === Chat nativo ===
+    const chatFab = document.getElementById('chatFab');
+    const chatPanel = document.getElementById('chatPanel');
+    const chatClose = document.getElementById('chatClose');
+    const chatMsg = document.getElementById('chatMsg');
+    const chatSendWpp = document.getElementById('chatSendWpp');
+    const chatSendEmail = document.getElementById('chatSendEmail');
+
+    function openChat(){
+      chatPanel.style.display = 'block';
+      track('ChatOpen', { source: 'fab' });
+      const resumen = lastSimSummary();
+      if (resumen && !chatMsg.value.trim()){
+        chatMsg.value = "Hola, quiero asesoramiento sobre mi simulación.\n\n" + resumen;
+      }
+    }
+    function closeChat(){ chatPanel.style.display = 'none'; }
+
+    chatFab.addEventListener('click', openChat);
+    chatClose.addEventListener('click', closeChat);
+
+    chatSendWpp.addEventListener('click', () => {
+      const tel = '5492804641495';
+      const texto = chatMsg.value.trim() || 'Hola, quiero asesoramiento sobre planes de retiro.';
+      window.open(`https://wa.me/${tel}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+      track('ChatSend', { channel: 'whatsapp' });
+    });
+
+    chatSendEmail.addEventListener('click', () => {
+      const mailto = 'retiroseguro.plan@gmail.com';
+      const subject = 'Consulta desde el chat - Retiro Seguro';
+      const body = chatMsg.value.trim() || 'Hola, quiero asesoramiento sobre planes de retiro.';
+      // Nota: si el equipo no tiene cliente de correo configurado, mailto no abre.
+      window.location.href = `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      track('ChatSend', { channel: 'email' });
     });
   </script>
 </body>

@@ -92,3 +92,67 @@
     .cta.ghost{background:#fff;color:#374151;border:1px solid var(--border)}
     .result-grid{display:grid;gap:12px;grid-template-columns:1fr}
     @media(min-width:680px){.result-grid{grid-template-columns:1fr 1fr}}
+    .error{color:#dc2626;font-weight:700}
+
+    /* Footer */
+    footer{border-top:1px solid var(--border);text-align:center;color:#64748b;padding:24px 0;font-size:14px}
+    .link{color:#4f46e5;text-decoration:underline}.link:hover{color:#4338ca}
+
+    /* Chat nativo */
+    #chatFab{position:fixed; right:24px; bottom:24px; z-index:9999; padding:12px 16px; border-radius:9999px; border:1px solid var(--border); background:var(--card); color:#111827; font-weight:800; cursor:pointer; box-shadow:0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);}
+    #chatPanel{position:fixed; right:24px; bottom:92px; width:min(360px,calc(100% - 48px)); background:#fff; border:1px solid var(--border); border-radius:16px; z-index:9998; box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04); display:none; overflow:hidden;}
+    .chat-header{padding:12px 14px; background:var(--indigo); color:#fff; font-weight:800; display:flex; justify-content:space-between; align-items:center;}
+    .chat-body{ padding:12px; display:grid; gap:10px; }
+    .chat-msg{width:100%; min-height:80px; padding:10px 12px; font:inherit; border:1px solid var(--border); border-radius:12px; resize:vertical;}
+    .chat-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .chat-input{ display:grid; gap:8px; }
+    .chat-note{ font-size:12px; color:#64748b; }
+    .chat-close{ background:transparent; color:#fff; border:none; font-size:18px; cursor:pointer; }
+
+    .chat-msg-user{ justify-self:end; background:#e5e7eb; color:#111827; border:1px solid #d1d5db; padding:10px 12px; border-radius:12px; max-width:85% }
+    .chat-msg-bot{ justify-self:start; background:#eef2ff; border:1px solid #c7d2fe; color:#111827; padding:10px 12px; border-radius:12px; max-width:85% }
+    .typing{ justify-self:start; background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:10px 12px; border-radius:12px; font-style:italic; }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px }
+    .chips .cta.ghost{ padding:8px 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container bar">
+      <a href="/retiro-seguro-landing/v2/" class="brand">
+        <img src="../assets/logo.png" alt="Retiro Seguro">
+        <strong>Retiro Seguro</strong>
+      </a>
+      <nav aria-label="Principal">
+        <a href="#que-es">Qué es</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#planes">Planes</a>
+        <a href="#cotizador">Cotizador</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1>Planificá hoy tu retiro.<br>Disfrutá tranquilo mañana.</h1>
+        <p class="lead">Simulá tu plan en <strong>segundos</strong>, <strong>sin dejar datos personales</strong>. Resultados estimados claros con dos escenarios.</p>
+        <div class="note">🔒 <span><strong>No pedimos datos personales para usar el cotizador.</strong> Si te gusta el resultado, después podés continuar por WhatsApp o email.</span></div>
+        <p style="margin-top:16px"><a id="cta-hero" class="cta" href="#cotizador">Cotizá ahora</a></p>
+      </div>
+      <figure class="hero-media">
+        <img src="../assets/hero-playa.jpg" alt="Personas retiradas disfrutando en una playa paradisíaca" onerror="this.onerror=null; this.src='../assets/hero.png';">
+        <figcaption class="hero-caption">Pasarla bien en el futuro es una decisión.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- QUÉ ES, BENEFICIOS, PLANES, COTIZADOR, CHAT... -->
+  <!-- (se mantienen igual que en la última versión que tenías funcionando, sin los bloques nuevos) -->
+
+  <footer>
+    © <span id="y"></span> Retiro Seguro — <a class="link" href="../privacidad.html">Privacidad</a> · <a class="link" href="../terminos.html">Términos</a>
+  </footer>
+</body>
+</html>

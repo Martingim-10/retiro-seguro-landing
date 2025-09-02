@@ -300,10 +300,10 @@
 
       <!-- Chips -->
       <div id="chatChips" class="chips">
-        <button class="cta ghost" data-chip="cotizar">Cotizar ahora</button>
-        <button class="cta ghost" data-chip="beneficios">Beneficios</button>
-        <button class="cta ghost" data-chip="impuestos">Impuestos / Ganancias</button>
-        <button class="cta ghost" data-chip="rescates">Rescates</button>
+        <button class="cta ghost" data-key="cotizar">Cotizar ahora</button>
+        <button class="cta ghost" data-key="beneficios">Beneficios</button>
+        <button class="cta ghost" data-key="impuestos">Impuestos / Ganancias</button>
+        <button class="cta ghost" data-key="rescates">Rescates</button>
       </div>
 
       <!-- Entrada -->
@@ -319,20 +319,21 @@
     </div>
   </div>
 
+  <!-- ===== JS ÚNICO AL FINAL (no pongas otros scripts de chat) ===== -->
   <script>
-    // Año en footer
+  document.addEventListener('DOMContentLoaded', () => {
+    // Año
     const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear();
 
-    // Smooth scroll para anchors
+    // Smooth scroll
     document.addEventListener('click', (e) => {
-      const a = e.target.closest('a[href^="#"]');
-      if (!a) return;
+      const a = e.target.closest('a[href^="#"]'); if (!a) return;
       const id = a.getAttribute('href').slice(1);
       const el = document.getElementById(id);
       if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
 
-    // Auto-scroll si vienen del anuncio (?calc/utm)
+    // Auto-scroll campañas
     (function(){
       const p = new URLSearchParams(location.search);
       if (p.has('calc') || p.has('utm_source') || p.has('utm_campaign')) {
@@ -341,20 +342,14 @@
       }
     })();
 
-    // === Calculadora ===
+    // ===== Calculadora =====
     const fmtARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
     function calcularValorAcumulado(aporte, meses, rendimientoAnual){
-      const r = rendimientoAnual / 12;
-      let valor = 0;
+      const r = rendimientoAnual / 12; let valor = 0;
       for (let i = 0; i < meses; i++) valor = (valor + aporte) * (1 + r);
       return valor;
     }
-
-    function track(eventName, params){
-      try { if (window.gtag) gtag('event', eventName, params); } catch {}
-    }
-
+    function track(eventName, params){ try { if (window.gtag) gtag('event', eventName, params); } catch {} }
     function buildResumenFromInputs(aporte, edad, retiro, v1, v2){
       return `Resumen de simulación:
 - Edad actual: ${edad}
@@ -363,7 +358,6 @@
 - Escenario 1 (15,9%): ${fmtARS.format(v1)}
 - Escenario 2 (44%): ${fmtARS.format(v2)}`;
     }
-
     function lastSimSummary(){
       try {
         const raw = localStorage.getItem('rs_calc'); if (!raw) return '';
@@ -376,52 +370,33 @@
         return buildResumenFromInputs(d.aporte, d.edad, d.retiro, v1, v2);
       } catch { return ''; }
     }
-
     function calc(){
       const e = document.getElementById('calc-error');
       e.style.display = 'none'; e.textContent = '';
-
       const aporte = parseFloat(document.getElementById('aporte').value);
       const edad = parseFloat(document.getElementById('edad-actual').value);
       const retiro = parseFloat(document.getElementById('edad-retiro').value);
-
       track('CalcStart', { aporte_mensual: aporte, edad_actual: edad, edad_retiro: retiro });
-
       if (isNaN(aporte) || isNaN(edad) || isNaN(retiro)) { e.textContent = "Valores inválidos."; e.style.display = 'block'; return; }
       const anios = retiro - edad; const meses = anios * 12;
       if (anios <= 0) { e.textContent = "La edad de retiro debe ser mayor a la actual."; e.style.display = 'block'; return; }
       if (aporte <= 0) { e.textContent = "El aporte mensual debe ser mayor a cero."; e.style.display = 'block'; return; }
-
       const T1 = 0.159, T2 = 0.44;
       const v1 = calcularValorAcumulado(aporte, meses, T1);
       const v2 = calcularValorAcumulado(aporte, meses, T2);
-
-      const intro = `¡Excelente! Con un aporte de ${fmtARS.format(aporte)} por mes, y proyectando tu retiro a los ${retiro} años, aquí tenés dos escenarios:`;
-      document.getElementById('intro').textContent = intro;
+      document.getElementById('intro').textContent = `¡Excelente! Con un aporte de ${fmtARS.format(aporte)} por mes, y proyectando tu retiro a los ${retiro} años, aquí tenés dos escenarios:`;
       document.getElementById('esc1').textContent = `≈ ${fmtARS.format(v1)}`;
       document.getElementById('esc2').textContent = `≈ ${fmtARS.format(v2)}`;
-
       const resumen = buildResumenFromInputs(aporte, edad, retiro, v1, v2);
       const tel = '5492804641495';
       const mailto = 'retiroseguro.plan@gmail.com';
-
       document.getElementById('cta-wpp').href = `https://wa.me/${tel}?text=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.' )}`;
       document.getElementById('cta-mail').href = `mailto:${mailto}?subject=${encodeURIComponent('Cotización de retiro')}&body=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.')}`;
-
       document.getElementById('post-cta').style.display = 'flex';
       document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      track('CalcCompleted', {
-        aporte_mensual: aporte,
-        edad_actual: edad,
-        edad_retiro: retiro,
-        escenario1: Math.round(v1),
-        escenario2: Math.round(v2)
-      });
-
+      track('CalcCompleted', { aporte_mensual: aporte, edad_actual: edad, edad_retiro: retiro, escenario1: Math.round(v1), escenario2: Math.round(v2) });
       try { localStorage.setItem('rs_calc', JSON.stringify({ aporte, edad, retiro })); } catch {}
     }
-
     document.getElementById('btn-calcular').addEventListener('click', calc);
     document.getElementById('btn-limpiar').addEventListener('click', () => {
       document.getElementById('intro').textContent = 'Ingresá los datos y presioná “Calcular”.';
@@ -431,165 +406,128 @@
       const e = document.getElementById('calc-error'); e.style.display = 'none'; e.textContent = '';
     });
 
-    // === Chat nativo conversacional (UN SOLO BLOQUE, al final) ===
-    const chatFab = document.getElementById('chatFab');
-    const chatPanel = document.getElementById('chatPanel');
-    const chatClose = document.getElementById('chatClose');
-    const chatMsg = document.getElementById('chatMsg');
-    const chatSendWpp = document.getElementById('chatSendWpp');
-    const chatSendEmail = document.getElementById('chatSendEmail');
-    const chatLog = document.getElementById('chatLog');
-    const chatChips = document.getElementById('chatChips');
-    const chatSendMsg = document.getElementById('chatSendMsg');
+    // ===== Chat nativo (chips + respuestas + auto-calc) =====
+    const $ = (id) => document.getElementById(id);
+    const chatFab = $('chatFab'), chatPanel = $('chatPanel'), chatClose = $('chatClose');
+    const chatMsg = $('chatMsg'), chatLog = $('chatLog'), chatChips = $('chatChips');
+    const btnSend = $('chatSendMsg'), btnWpp = $('chatSendWpp'), btnEmail = $('chatSendEmail');
 
-    function openChat(){
-      chatPanel.style.display = 'block';
-      track('ChatOpen', { source: 'fab' });
-      const resumen = lastSimSummary();
-      if (resumen && !chatMsg.value.trim()){
-        chatMsg.value = "Hola, quiero asesoramiento sobre mi simulación.\n\n" + resumen;
-      }
-      setChips([['Cotizar','cotizar'], ['Beneficios','beneficios'], ['Impuestos','impuestos'], ['Rescates','rescates'], ['Cómo funciona','como']]);
-    }
-    function closeChat(){ chatPanel.style.display = 'none'; }
-
-    function scrolldown(){ chatLog.scrollTop = chatLog.scrollHeight; }
+    function scrolldown(){ if (chatLog) chatLog.scrollTop = chatLog.scrollHeight; }
     function addUser(msg){ const d=document.createElement('div'); d.className='chat-msg-user'; d.textContent=msg; chatLog.appendChild(d); scrolldown(); }
     function addBot(msg){ const d=document.createElement('div'); d.className='chat-msg-bot'; d.innerHTML=msg; chatLog.appendChild(d); scrolldown(); }
-    function showTyping(){ const t=document.createElement('div'); t.className='typing'; t.textContent='Escribiendo…'; chatLog.appendChild(t); scrolldown(); return t; }
+    function typing(){ const t=document.createElement('div'); t.className='typing'; t.textContent='Escribiendo…'; chatLog.appendChild(t); scrolldown(); return t; }
     function setChips(items){
+      if (!chatChips) return;
       chatChips.innerHTML = '';
       items.forEach(([label, key]) => {
         const b = document.createElement('button');
-        b.className = 'cta ghost';
-        b.dataset.chip = key;
-        b.textContent = label;
-        b.addEventListener('click', () => handleUserText(key));
+        b.className = 'cta ghost'; b.textContent = label; b.dataset.key = key;
+        b.addEventListener('click', () => handle(key));
         chatChips.appendChild(b);
       });
     }
+    function openChat(){
+      if (!chatPanel) return;
+      chatPanel.style.display = 'block';
+      try {
+        const raw = localStorage.getItem('rs_calc');
+        if (raw && chatMsg && !chatMsg.value.trim()){
+          const d = JSON.parse(raw);
+          const r1 = calcularValorAcumulado(d.aporte, (d.retiro-d.edad)*12, 0.159);
+          const r2 = calcularValorAcumulado(d.aporte, (d.retiro-d.edad)*12, 0.44);
+          const fmt = new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0});
+          chatMsg.value = `Hola, quiero asesoramiento sobre mi simulación.
+
+- Edad actual: ${d.edad}
+- Edad retiro: ${d.retiro}
+- Aporte mensual: ${fmt.format(d.aporte)}
+- Escenario 1 (15,9%): ${fmt.format(r1)}
+- Escenario 2 (44%): ${fmt.format(r2)}`;
+        }
+      } catch {}
+      setChips([['Cotizar','cotizar'],['Beneficios','beneficios'],['Impuestos','impuestos'],['Rescates','rescates'],['Cómo funciona','como']]);
+    }
+    function closeChat(){ if (chatPanel) chatPanel.style.display='none'; }
 
     const RESP = {
       beneficios: `Beneficios clave:<br>• Deducción de Ganancias*<br>• Crecimiento en el tiempo (capitalización mensual)<br>• Flexibilidad para ajustar aportes y rescatar.<br><span class="chat-note">*Sujeto a normativa vigente.</span>`,
-      impuestos: `Impuestos / Ganancias:<br>Los aportes son <strong>deducibles del Impuesto a las Ganancias</strong> según normativa vigente. La deducción puede variar según topes actuales.`,
-      rescates: `Rescates:<br>Podés hacer <strong>rescates parciales o totales</strong>. Las condiciones dependen del plan y el momento del rescate.`,
-      como: `Cómo funciona:<br>1) Ingresás <strong>edad actual</strong>, <strong>edad de retiro</strong> y <strong>aporte mensual</strong>.<br>2) Calculamos 2 escenarios (15,9% y 44% anual aprox.).<br>3) Si te gusta, seguís por WhatsApp o Email.`,
-      contacto: `Contacto humano:<br>Usá los botones de <strong>WhatsApp</strong> o <strong>Email</strong> debajo del resultado. Si ya simulaste, adjuntamos tu resumen automáticamente.`
+      impuestos: `Impuestos / Ganancias:<br>Los aportes son <strong>deducibles del Impuesto a las Ganancias</strong> según normativa vigente (con topes).`,
+      rescates: `Rescates:<br>Podés hacer <strong>rescates parciales o totales</strong>. Dependen del plan y el momento.`,
+      como: `Cómo funciona:<br>1) Ingresás edad actual, edad de retiro y aporte mensual.<br>2) Calculamos 2 escenarios (15,9% y 44% anual aprox.).<br>3) Si te gusta, seguís por WhatsApp o Email.`
     };
 
-    function replyWith(key){
-      const typing = showTyping();
-      setTimeout(()=>{
-        typing.remove();
-        addBot(RESP[key] || '¿Querés que te ayude a cotizar o ver beneficios/impuestos/rescates?');
-        track('ChatBotReply',{ intent: key });
-        setChips([
-          ['Cotizar ahora','cotizar'],
-          ['Beneficios','beneficios'],
-          ['Impuestos','impuestos'],
-          ['Rescates','rescates'],
-          ['Cómo funciona','como']
-        ]);
-      }, 400);
-    }
-
-    function handleUserText(raw){
-      const text = (raw || chatMsg.value || '').trim();
-      if (!text) return;
+    function handle(raw){
+      const text = (raw || (chatMsg && chatMsg.value) || '').trim();
+      if (!text || !chatLog) return;
       addUser(text);
-      chatMsg.value = '';
+      if (chatMsg) chatMsg.value = '';
       const t = text.toLowerCase();
 
-      if (t==='cotizar' || /cotiz/.test(t)) {
-        track('ChatIntent',{intent:'cotizar'});
+      if (t==='cotizar' || /cotiz/.test(t)){
         addBot('Te llevo al cotizador 👇');
-        const el = document.getElementById('cotizador'); if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
-        setChips([['Ingresar datos','cotizar'], ['Beneficios','beneficios'], ['Cómo funciona','como']]);
+        const el = document.getElementById('cotizador'); if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+        setChips([['Ingresar datos','cotizar'],['Beneficios','beneficios'],['Cómo funciona','como']]);
         return;
       }
-      if (/\bbeneficio(s)?\b/.test(t)) { track('ChatIntent',{intent:'beneficios'}); return replyWith('beneficios'); }
-      if (/\b(impuesto|ganancia|ganancias)\b/.test(t)) { track('ChatIntent',{intent:'impuestos'}); return replyWith('impuestos'); }
-      if (/\brescate(s)?\b/.test(t)) { track('ChatIntent',{intent:'rescates'}); return replyWith('rescates'); }
-      if (/\b(cómo|como)\b.*\bfunciona\b/.test(t) || t==='como' || t==='cómo funciona') { track('ChatIntent',{intent:'como'}); return replyWith('como'); }
-      if (/\b(contacto|asesor|humano|hablar)\b/.test(t)) { track('ChatIntent',{intent:'contacto'}); return replyWith('contacto'); }
+      if (/\bbeneficio(s)?\b/.test(t)) { return botReply('beneficios'); }
+      if (/\b(impuesto|ganancia|ganancias)\b/.test(t)) { return botReply('impuestos'); }
+      if (/\brescate(s)?\b/.test(t)) { return botReply('rescates'); }
+      if (/\b(cómo|como)\b.*\bfunciona\b/.test(t) || t==='como' || t==='cómo funciona') { return botReply('como'); }
 
-      // Datos en una línea: "aporte 50000 edad 40 retiro 60"
+      // auto-cálculo
       const aporte = /aporte\s*([0-9.]+)/.exec(t);
       const edad = /\bedad\s*([0-9]{2})\b/.exec(t);
       const retiro = /\bretiro\s*([0-9]{2})\b/.exec(t);
       if (aporte && edad && retiro){
-        const aporteNum = parseFloat(aporte[1].replace(/\./g,''));
-        const edadNum = parseFloat(edad[1]);
-        const retiroNum = parseFloat(retiro[1]);
-        if (!isNaN(aporteNum) && !isNaN(edadNum) && !isNaN(retiroNum)){
+        const a = parseFloat(aporte[1].replace(/\./g,'')); const e = parseFloat(edad[1]); const r = parseFloat(retiro[1]);
+        if (!isNaN(a) && !isNaN(e) && !isNaN(r)){
           try{
-            document.getElementById('aporte').value = aporteNum;
-            document.getElementById('edad-actual').value = edadNum;
-            document.getElementById('edad-retiro').value = retiroNum;
+            const inA = document.getElementById('aporte'), inE = document.getElementById('edad-actual'), inR = document.getElementById('edad-retiro');
+            if (inA && inE && inR){ inA.value=a; inE.value=e; inR.value=r; }
             calc();
-            track('ChatIntent', { intent:'auto-calc' });
-            const typing = showTyping();
-            setTimeout(()=>{ typing.remove(); addBot('Listo, corrí la simulación con tus datos ✅'); }, 350);
-            const el = document.getElementById('resultado'); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-            setChips([['Enviar por WhatsApp','wpp'], ['Enviar por Email','email'], ['Nueva simulación','cotizar']]);
+            const tnode = typing();
+            setTimeout(()=>{ tnode.remove(); addBot('Listo, corrí la simulación con tus datos ✅'); }, 350);
+            const res = document.getElementById('resultado'); if (res) res.scrollIntoView({behavior:'smooth', block:'start'});
+            setChips([['Enviar por WhatsApp','wpp'],['Enviar por Email','email'],['Nueva simulación','cotizar']]);
             return;
           }catch{}
         }
       }
-
-      // Fallback
-      track('ChatIntent',{intent:'fallback'});
-      const typing = showTyping();
+      // fallback
+      botReply(null);
+    }
+    function botReply(key){
+      const t = typing();
       setTimeout(()=>{
-        typing.remove();
-        addBot('Puedo ayudarte a <strong>cotizar</strong>, ver <strong>beneficios</strong>, <strong>impuestos</strong> o <strong>rescates</strong>. Probá con “cotizar” o usá los botones 😉');
-        setChips([['Cotizar','cotizar'], ['Beneficios','beneficios'], ['Impuestos','impuestos'], ['Rescates','rescates'], ['Cómo funciona','como']]);
+        t.remove();
+        addBot(RESP[key] || 'Puedo ayudarte a <strong>cotizar</strong>, ver <strong>beneficios</strong>, <strong>impuestos</strong> o <strong>rescates</strong>. Probá con “cotizar” o usá los botones 😉');
+        setChips([['Cotizar','cotizar'],['Beneficios','beneficios'],['Impuestos','impuestos'],['Rescates','rescates'],['Cómo funciona','como']]);
       }, 350);
     }
 
-    chatFab.addEventListener('click', openChat);
-    chatClose.addEventListener('click', closeChat);
-    chatSendMsg.addEventListener('click', ()=> handleUserText());
-
-    // Envíos externos
-    function openWhatsAppFromChat(){
+    // binds
+    if (chatFab) chatFab.addEventListener('click', openChat);
+    if (chatClose) chatClose.addEventListener('click', closeChat);
+    if (btnSend) btnSend.addEventListener('click', () => handle());
+    if (btnWpp) btnWpp.addEventListener('click', () => {
       const tel = '5492804641495';
-      const texto = (document.getElementById('chatMsg').value.trim() || lastSimSummary() || 'Hola, quiero asesoramiento sobre planes de retiro.');
+      const texto = (chatMsg && chatMsg.value.trim()) || lastSimSummary() || 'Hola, quiero asesoramiento sobre planes de retiro.';
       window.open(`https://wa.me/${tel}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
-      track('ChatSend', { channel: 'whatsapp' });
-    }
-    function openEmailFromChat(){
+    });
+    if (btnEmail) btnEmail.addEventListener('click', () => {
       const mailto = 'retiroseguro.plan@gmail.com';
       const subject = 'Consulta desde el chat - Retiro Seguro';
-      const body = (document.getElementById('chatMsg').value.trim() || lastSimSummary() || 'Hola, quiero asesoramiento sobre planes de retiro.');
+      const body = (chatMsg && chatMsg.value.trim()) || lastSimSummary() || 'Hola, quiero asesoramiento sobre planes de retiro.';
       window.location.href = `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      track('ChatSend', { channel: 'email' });
-    }
-    chatSendWpp.addEventListener('click', openWhatsAppFromChat);
-    chatSendEmail.addEventListener('click', openEmailFromChat);
+    });
 
-    // Métricas extra útiles
-    (function() {
-      const heroCta = document.getElementById('cta-hero');
-      if (heroCta) heroCta.addEventListener('click', () => { try { gtag('event', 'HeroCTA', { label: 'cotizador' }); } catch {} });
-      const target = document.getElementById('cotizador');
-      if ('IntersectionObserver' in window && target){
-        let fired = false;
-        const io = new IntersectionObserver(entries => {
-          entries.forEach(e => {
-            if (!fired && e.isIntersecting && e.intersectionRatio > 0.35) {
-              fired = true; try { gtag('event', 'ScrollToCalculator', { via: 'viewport' }); } catch {}
-              io.disconnect();
-            }
-          });
-        }, { threshold: [0.35] });
-        io.observe(target);
-      }
-      const wpp = document.getElementById('cta-wpp');
-      const mail = document.getElementById('cta-mail');
-      if (wpp) wpp.addEventListener('click', () => { try { gtag('event', 'ResultCTA', { channel: 'whatsapp' }); } catch {} });
-      if (mail) mail.addEventListener('click', () => { try { gtag('event', 'ResultCTA', { channel: 'email' }); } catch {} });
-    })();
+    // chips iniciales del HTML
+    if (chatChips){
+      chatChips.querySelectorAll('button[data-key]').forEach(b=>{
+        b.addEventListener('click', ()=> handle(b.dataset.key));
+      });
+    }
+  });
   </script>
 </body>
 </html>

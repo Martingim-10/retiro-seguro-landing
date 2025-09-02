@@ -3,26 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Retiro Seguro — Cotizá tu plan con nuestro asistente</title>
-  <meta name="description" content="Conocé cómo funcionan los seguros de retiro, mirá beneficios y cotizá tu plan en 1 minuto con nuestro asistente (burbuja de chat abajo a la derecha)." />
+  <title>Retiro Seguro — Simulá tu retiro sin dejar datos</title>
+  <meta name="description" content="Simulá tu plan en segundos, sin dejar datos personales. Resultados estimados con dos escenarios." />
   <meta name="theme-color" content="#4f46e5" />
   <meta property="og:title" content="Retiro Seguro — Cotizá tu plan" />
-  <meta property="og:description" content="Abrí el chat y escribí “Quiero cotizar”. Obtené tu cotización en 1 minuto." />
+  <meta property="og:description" content="Simulá tu plan en segundos, sin dejar datos personales." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/hero-playa.jpg" />
+  <meta property="og:image" content="../assets/hero-playa.jpg" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NZMB5FW489"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-NZMB5FW489');
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/heroicons@2.1.3/dist/heroicons.min.js"></script>
-
-    <style>
+  <style>
     :root{
       --indigo:#4f46e5; --indigo-700:#4338ca; --bg:#f7fafc; --card:#ffffff;
       --muted:#475569; --text:#0f172a; --border:#e2e8f0;
-      --accent-1:#ff7e5f; --accent-2:#feb47b;
-      --gradient: linear-gradient(45deg, var(--indigo-700), var(--accent-1));
+      --gradient: linear-gradient(45deg, var(--indigo-700), #ff7e5f);
       --radius:16px;
     }
     *{box-sizing:border-box}
@@ -52,13 +58,8 @@
     .note{margin-top:16px;font-size:15px;color:#1f2937;display:flex;gap:10px;align-items:flex-start;background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:10px 12px}
 
     .hero-media{
-      position: relative;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
-      background: #fff;
-      aspect-ratio: 3/2;
+      position: relative; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1); background:#fff; aspect-ratio: 3/2;
     }
     .hero-media img{width:100%;height:100%;object-fit:cover}
     .hero-caption{
@@ -79,72 +80,85 @@
     .muted{color:var(--muted)}
     .icon{width:24px;height:24px;color:var(--indigo);margin-bottom:6px}
 
+    /* Cotizador */
+    .calc-wrap{display:grid;gap:20px;grid-template-columns:1fr}
+    @media(min-width:960px){.calc-wrap{grid-template-columns:1.1fr .9fr}}
+    .form-row{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:680px){.form-row{grid-template-columns:1fr 1fr}}
+    .input{
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;color:#0f172a;font:inherit
+    }
+    .cta{display:inline-block;background:var(--gradient);color:#fff;font-weight:800;border:none;padding:12px 18px;border-radius:12px;cursor:pointer;text-decoration:none}
+    .cta.ghost{background:#fff;color:#374151;border:1px solid var(--border)}
+    .result-grid{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:680px){.result-grid{grid-template-columns:1fr 1fr}}
+    .error{color:#dc2626;font-weight:700}
+
     /* Footer */
     footer{border-top:1px solid var(--border);text-align:center;color:#64748b;padding:24px 0;font-size:14px}
     .link{color:#4f46e5;text-decoration:underline}.link:hover{color:#4338ca}
 
-    /* Burbuja del bot */
-    df-messenger{
-      position:fixed !important; bottom:24px !important; right:24px !important;
-      z-index:2147483647 !important; display:block !important; opacity:1 !important;
-      --df-messenger-chat-bubble-background:transparent; --df-messenger-chat-bubble-button-color:#fff;
-      background:var(--gradient); animation:bounce 2s infinite;
+    /* Chat nativo */
+    #chatFab{
+      position:fixed; right:24px; bottom:24px; z-index:9999;
+      padding:12px 16px; border-radius:9999px; border:1px solid var(--border);
+      background:var(--card); color:#111827; font-weight:800; cursor:pointer;
+      box-shadow:0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
     }
-    @keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}60%{transform:translateY(-5px)}}
-    #abrirChatBtn{display:inline-block;margin-top:10px;padding:12px 24px;background:var(--gradient);color:#fff;border-radius:9999px;font-weight:700;transition:transform .2s ease}
-    #abrirChatBtn:hover{transform:translateY(-2px);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+    #chatFab:hover{ transform:translateY(-2px); }
+    #chatPanel{
+      position:fixed; right:24px; bottom:92px; width:min(360px,calc(100% - 48px));
+      background:#fff; border:1px solid var(--border); border-radius:16px; z-index:9998;
+      box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04);
+      display:none; overflow:hidden;
+    }
+    .chat-header{padding:12px 14px; background:var(--indigo); color:#fff; font-weight:800; display:flex; justify-content:space-between; align-items:center;}
+    .chat-body{ padding:12px; display:grid; gap:10px; }
+    .chat-msg{width:100%; min-height:80px; padding:10px 12px; font:inherit; border:1px solid var(--border); border-radius:12px; resize:vertical;}
+    .chat-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .chat-input{ display:grid; gap:8px; }
+    .chat-note{ font-size:12px; color:#64748b; }
+    .chat-close{ background:transparent; color:#fff; border:none; font-size:18px; cursor:pointer; }
+
+    .chat-msg-user{ justify-self:end; background:#e5e7eb; color:#111827; border:1px solid #d1d5db; padding:10px 12px; border-radius:12px; max-width:85% }
+    .chat-msg-bot{ justify-self:start; background:#eef2ff; border:1px solid #c7d2fe; color:#111827; padding:10px 12px; border-radius:12px; max-width:85% }
+    .typing{ justify-self:start; background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:10px 12px; border-radius:12px; font-style:italic; }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px }
+    .chips .cta.ghost{ padding:8px 12px; }
   </style>
-
-  <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
-  <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 </head>
-
 <body>
   <header>
     <div class="container bar">
-      <a href="#" class="brand">
-        <img src="assets/logo.png" alt="Retiro Seguro">
+      <a href="/retiro-seguro-landing/v2/" class="brand">
+        <img src="../assets/logo.png" alt="Retiro Seguro">
         <strong>Retiro Seguro</strong>
       </a>
       <nav aria-label="Principal">
         <a href="#que-es">Qué es</a>
         <a href="#beneficios">Beneficios</a>
         <a href="#planes">Planes</a>
-        <a href="#como">Cómo funciona</a>
+        <a href="#cotizador">Cotizador</a>
+        <a href="#quienes-somos">Quiénes somos</a>
       </nav>
     </div>
   </header>
 
+  <!-- HERO -->
   <section class="hero">
     <div class="container hero-grid">
       <div>
         <h1>Planificá hoy tu retiro.<br>Disfrutá tranquilo mañana.</h1>
-        <p class="lead">
-          Conocé cómo funcionan los seguros de retiro, mirá nuestros planes y
-          <strong> cotizá tu plan </strong> en 1 minuto con nuestro asistente.
-        </p>
-        <div class="note">💬
-          <span>Para <strong>cotizar ahora</strong>, abrí la <strong>burbuja del chat</strong> (abajo a la derecha) y escribí: <em>“Quiero cotizar”</em>.</span>
-        </div>
-        <a href="javascript:void(0)" id="abrirChatBtn">¡Cotizar ahora!</a>
-        <p style="margin-top:20px;color:#64748b;font-size:14px">
-          ¿Preferís WhatsApp?
-          <a href="https://wa.me/5492804641495?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20seguros%20de%20retiro" class="link">Escribinos</a>.
-        </p>
+        <p class="lead">Simulá tu plan en <strong>segundos</strong>, <strong>sin dejar datos personales</strong>. Resultados estimados claros con dos escenarios.</p>
+        <div class="note">🔒 <span><strong>No pedimos datos personales para usar el cotizador.</strong> Si te gusta el resultado, después podés continuar por WhatsApp o email.</span></div>
+        <p style="margin-top:16px"><a id="cta-hero" class="cta" href="#cotizador">Cotizá ahora</a></p>
       </div>
-
-      <!-- HERO con fallback -->
       <figure class="hero-media">
         <img
-          id="heroImg"
-          src="assets/hero-playa.jpg?v=1"
+          src="../assets/hero-playa.jpg?v=1"
           alt="Personas retiradas disfrutando en una playa paradisíaca"
-          width="1200" height="800"
-          onerror="this.onerror=null; this.src='assets/hero.png?v=1'; this.alt='Personas mayores disfrutando de su retiro';"
-        >
-        <figcaption class="hero-caption">
-          Pasarla bien en el futuro es una decisión.
-        </figcaption>
+          onerror="this.onerror=null; this.src='../assets/hero.png?v=1';">
+        <figcaption class="hero-caption">Pasarla bien en el futuro es una decisión.</figcaption>
       </figure>
     </div>
   </section>
@@ -173,21 +187,9 @@
     <div class="container">
       <h2>Beneficios clave</h2>
       <div class="grid grid-3" style="margin-top:12px">
-        <div class="card">
-          <span class="icon" data-heroicon-name="currency-dollar"></span>
-          <strong>Deducción de Ganancias</strong>
-          <p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p>
-        </div>
-        <div class="card">
-          <span class="icon" data-heroicon-name="chart-line"></span>
-          <strong>Crecimiento en el tiempo</strong>
-          <p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p>
-        </div>
-        <div class="card">
-          <span class="icon" data-heroicon-name="check-circle"></span>
-          <strong>Flexibilidad real</strong>
-          <p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p>
-        </div>
+        <div class="card"><span class="icon">💸</span><strong>Deducción de Ganancias</strong><p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p></div>
+        <div class="card"><span class="icon">📈</span><strong>Crecimiento en el tiempo</strong><p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p></div>
+        <div class="card"><span class="icon">✅</span><strong>Flexibilidad real</strong><p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p></div>
       </div>
     </div>
   </section>
@@ -219,57 +221,481 @@
     </div>
   </section>
 
-  <!-- CÓMO FUNCIONA -->
-  <section id="como">
+  <!-- COTIZADOR -->
+  <section id="cotizador">
     <div class="container">
-      <h2>Cómo funciona</h2>
-      <div class="grid grid-3" style="margin-top:12px">
-        <div class="card">
-          <span class="icon" data-heroicon-name="chat-bubble-left-right"></span>
-          <strong>Contanos tu perfil</strong>
-          <p class="muted" style="margin-top:6px">Edad, aporte deseado y edad de retiro.</p>
+      <h2>Calculadora de retiro</h2>
+      <p class="muted">Proyección instantánea en menos de 10 segundos. <strong>No pedimos datos personales</strong> para usarla.</p>
+
+      <div class="calc-wrap" style="margin-top:12px">
+        <div class="panel">
+          <form id="calc-form" onsubmit="return false;">
+            <div class="form-row">
+              <label class="muted">Edad actual
+                <input id="edad-actual" class="input" type="number" min="18" max="70" value="35" required>
+              </label>
+              <label class="muted">Edad de retiro deseada
+                <input id="edad-retiro" class="input" type="number" min="40" max="75" value="65" required>
+              </label>
+            </div>
+            <label class="muted" style="display:block;margin-top:12px">Aporte mensual (ARS)
+              <input id="aporte" class="input" type="number" min="10000" step="1000" value="50000" required>
+            </label>
+
+            <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+              <button id="btn-calcular" class="cta" type="button">Calcular</button>
+              <button id="btn-limpiar" class="cta ghost" type="reset">Limpiar</button>
+            </div>
+
+            <p id="calc-error" class="error" style="display:none;margin-top:10px"></p>
+            <p class="muted" style="font-size:12px;margin-top:8px">Cálculo estimativo. Los rendimientos pueden variar.</p>
+          </form>
         </div>
-        <div class="card">
-          <span class="icon" data-heroicon-name="calculator"></span>
-          <strong>Obtené tu cotización</strong>
-          <p class="muted" style="margin-top:6px">El asistente la genera al instante.</p>
-        </div>
-        <div class="card">
-          <span class="icon" data-heroicon-name="arrow-path-rounded-square"></span>
-          <strong>Elegí cómo avanzar</strong>
-          <p class="muted" style="margin-top:6px">Seguimos por chat, WhatsApp o te contacta un asesor.</p>
+
+        <div class="panel">
+          <div id="resultado" style="display:grid;gap:12px">
+            <div id="intro" class="muted">Ingresá los datos y presioná “Calcular”.</div>
+
+            <div class="result-grid">
+              <div class="card">
+                <div class="muted" style="font-size:12px">Escenario 1 (aprox. 15.9% anual)</div>
+                <div id="esc1" style="font-weight:800;font-size:20px">—</div>
+              </div>
+              <div class="card">
+                <div class="muted" style="font-size:12px">Escenario 2 (aprox. 44% anual)</div>
+                <div id="esc2" style="font-weight:800;font-size:20px">—</div>
+              </div>
+            </div>
+
+            <div id="nota" class="muted" style="font-size:12px">Proyección en ARS. Aporte al inicio de cada mes.</div>
+
+            <!-- CTA post-cálculo -->
+            <div id="post-cta" style="display:none; margin-top:6px; gap:10px; flex-wrap:wrap">
+              <a id="cta-wpp" class="cta" href="#" target="_blank" rel="noopener">Continuar por WhatsApp</a>
+              <a id="cta-mail" class="cta ghost" href="#">Recibir por Email</a>
+              <div class="muted" style="font-size:12px">Enviamos tus resultados en el mensaje, sin pedir datos.</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="panel" style="margin-top:14px">
-        <strong>Recordatorio:</strong> Para iniciar, abrí el chat y escribí <em>“Quiero cotizar”</em>.
+
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS -->
+  <section id="quienes-somos">
+    <div class="container">
+      <h2>¿Quiénes somos?</h2>
+      <div class="panel" style="margin-top:12px">
+        <h3>Organización Kuzmanich</h3>
+        <p class="muted">
+          Emplazados frente al monumento de la Libertad y el Trabajo, emblema de la Ciudad,
+          nos constituimos en un Grupo comprometido desde el lugar del Servicio, la Idoneidad
+          y la Capacidad Profesional. Enmarcados en el Grupo Sancor Seguros, atendemos a las
+          necesidades cotidianas de las personas, empresas e instituciones.
+        </p>
+        <h3 style="margin-top:20px">Descripción</h3>
+        <p class="muted">
+          Antigüedad y Experiencia, sumadas al loable aporte de jóvenes emprendedores, imprimen
+          en nuestra empresa un sello peculiar. Aquel que se caracteriza por hacer de cada uno
+          de sus productos, la seguridad que necesitás, generar la confianza que sustenta tu
+          decisión y brindarte el asesoramiento que requiere tu inversión.
+        </p>
+        <h3 style="margin-top:20px">Valores</h3>
+        <p class="muted">
+          Asumimos nuestra tarea con dedicación, entusiasmo y responsabilidad. Nos preocupamos
+          por la calidad de las coberturas que ofrecemos y nos distingue el compromiso social
+          y ético en el desempeño de nuestra actividad.
+        </p>
+        <p class="muted">
+          Nuestra solvencia, seriedad, respeto, honestidad, profesionalismo y compromiso nos distinguen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREVENCIÓN RETIRO -->
+  <section id="compania">
+    <div class="container">
+      <h2>Respaldados por Prevención Retiro</h2>
+      <div class="panel" style="text-align:center; margin-top:12px">
+        <p class="muted">
+          Comercializamos en forma exclusiva los seguros de <strong>Prevención Retiro</strong>,  
+          compañía autorizada y regulada en Argentina.
+        </p>
+
+        <!-- Primero intenta usar el logo local del repo; si no existe, cae a un logo público -->
+        <img
+          src="../assets/prevencion-retiro.png"
+          alt="Prevención Retiro"
+          style="max-width:260px; margin:20px auto; display:block"
+          onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Sancor_Seguros_Logo.svg/512px-Sancor_Seguros_Logo.svg.png';"
+        >
+
+        <p class="muted" style="font-size:12px">
+          Autorizados a utilizar su imagen y a comercializar sus productos.
+        </p>
       </div>
     </div>
   </section>
 
   <footer>
-    © <span id="y"></span> Retiro Seguro — <a class="link" href="privacidad.html">Privacidad</a> · <a class="link" href="terminos.html">Términos</a>
+    © <span id="y"></span> Retiro Seguro — <a class="link" href="../privacidad.html">Privacidad</a> · <a class="link" href="../terminos.html">Términos</a>
   </footer>
 
-  <!-- Dialogflow Messenger -->
-  <df-messenger
-    location="us"
-    project-id="chatbotprevencionretiro"
-    agent-id="27aae0fd-56e8-43e5-9f7c-5ffc6f132462"
-    environment="draft"
-    language-code="es"
-    max-query-length="-1">
-    <df-messenger-chat-bubble chat-title="BOT RETIRO"></df-messenger-chat-bubble>
-  </df-messenger>
+  <!-- Chat nativo -->
+  <button id="chatFab" aria-label="Abrir chat">¿Dudas? Chateá</button>
+  <div id="chatPanel" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="chat-header">
+      <div id="chatTitle">Asesor en línea</div>
+      <button class="chat-close" aria-label="Cerrar" id="chatClose">×</button>
+    </div>
+
+    <div class="chat-body">
+      <!-- Historial -->
+      <div id="chatLog" style="display:grid; gap:8px; max-height:40vh; overflow:auto;">
+        <div class="chat-msg-bot">
+          ¡Hola! Soy el asistente de Retiro Seguro. Puedo ayudarte a <strong>cotizar</strong> o responder dudas sobre <strong>beneficios</strong>, <strong>impuestos</strong>, <strong>rescates</strong> y más.
+        </div>
+      </div>
+
+      <!-- Chips -->
+      <div id="chatChips" class="chips">
+        <button class="cta ghost" data-chip="cotizar">Cotizar ahora</button>
+        <button class="cta ghost" data-chip="beneficios">Beneficios</button>
+        <button class="cta ghost" data-chip="impuestos">Impuestos / Ganancias</button>
+        <button class="cta ghost" data-chip="rescates">Rescates</button>
+      </div>
+
+      <!-- Entrada -->
+      <div class="chat-input" style="margin-top:8px">
+        <textarea id="chatMsg" class="chat-msg" placeholder="Escribí tu consulta… (ej.: 'aporte 50000 edad 40 retiro 60')"></textarea>
+        <div class="chat-actions">
+          <button id="chatSendWpp" class="cta">Enviar por WhatsApp</button>
+          <button id="chatSendEmail" class="cta ghost">Enviar por Email</button>
+          <button id="chatSendMsg" class="cta ghost" type="button">Enviar al bot</button>
+        </div>
+        <div class="chat-note">No pedimos datos personales para escribirnos.</div>
+      </div>
+    </div>
+  </div>
 
   <script>
+    // Año en footer
     const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear();
-    document.addEventListener('DOMContentLoaded', () => {
-      const chatButton = document.getElementById('abrirChatBtn');
-      const dfMessenger = document.querySelector('df-messenger');
-      if (chatButton && dfMessenger) {
-        chatButton.addEventListener('click', () => dfMessenger.setAttribute('expand', 'true'));
-      }
+
+    // Smooth scroll para anchors
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
+
+    // Auto-scroll si vienen del anuncio (?calc=1 o con UTM)
+    (function(){
+      const p = new URLSearchParams(location.search);
+      if (p.has('calc') || p.has('utm_source') || p.has('utm_campaign')) {
+        const el = document.getElementById('cotizador');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    })();
+
+    // === Calculadora ===
+    const fmtARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+    function calcularValorAcumulado(aporte, meses, rendimientoAnual){
+      const r = rendimientoAnual / 12;
+      let valor = 0;
+      for (let i = 0; i < meses; i++) {
+        valor = (valor + aporte) * (1 + r);
+      }
+      return valor;
+    }
+
+    function track(eventName, params){
+      try { if (window.gtag) gtag('event', eventName, params); } catch {}
+      try { console.log('[track]', eventName, params); } catch {}
+    }
+
+    function buildResumenFromInputs(aporte, edad, retiro, v1, v2){
+      return `Resumen de simulación:
+- Edad actual: ${edad}
+- Edad retiro: ${retiro}
+- Aporte mensual: ${fmtARS.format(aporte)}
+- Escenario 1 (15,9%): ${fmtARS.format(v1)}
+- Escenario 2 (44%): ${fmtARS.format(v2)}`;
+    }
+
+    function lastSimSummary(){
+      try {
+        const raw = localStorage.getItem('rs_calc');
+        if (!raw) return '';
+        const d = JSON.parse(raw);
+        if (!d) return '';
+        const T1 = 0.159, T2 = 0.44;
+        const anios = (d.retiro - d.edad);
+        if (isNaN(anios) || anios <= 0 || isNaN(d.aporte)) return '';
+        const meses = anios * 12;
+        const v1 = calcularValorAcumulado(d.aporte, meses, T1);
+        const v2 = calcularValorAcumulado(d.aporte, meses, T2);
+        return buildResumenFromInputs(d.aporte, d.edad, d.retiro, v1, v2);
+      } catch { return ''; }
+    }
+
+    function calc(){
+      const e = document.getElementById('calc-error');
+      e.style.display = 'none'; e.textContent = '';
+
+      const aporte = parseFloat(document.getElementById('aporte').value);
+      const edad = parseFloat(document.getElementById('edad-actual').value);
+      const retiro = parseFloat(document.getElementById('edad-retiro').value);
+
+      track('CalcStart', { aporte_mensual: aporte, edad_actual: edad, edad_retiro: retiro });
+
+      if (isNaN(aporte) || isNaN(edad) || isNaN(retiro)) {
+        e.textContent = "Valores inválidos. Ingresá solo cifras para montos y edades.";
+        e.style.display = 'block'; return;
+      }
+      const anios = retiro - edad;
+      const meses = anios * 12;
+      if (anios <= 0) { e.textContent = "La edad de retiro debe ser mayor a la actual."; e.style.display = 'block'; return; }
+      if (aporte <= 0) { e.textContent = "El aporte mensual debe ser mayor a cero."; e.style.display = 'block'; return; }
+
+      const T1 = 0.159, T2 = 0.44;
+      const v1 = calcularValorAcumulado(aporte, meses, T1);
+      const v2 = calcularValorAcumulado(aporte, meses, T2);
+
+      const intro = `¡Excelente! Con un aporte de ${fmtARS.format(aporte)} por mes, y proyectando tu retiro a los ${retiro} años, aquí tenés dos escenarios:`;
+      document.getElementById('intro').textContent = intro;
+      document.getElementById('esc1').textContent = `≈ ${fmtARS.format(v1)}`;
+      document.getElementById('esc2').textContent = `≈ ${fmtARS.format(v2)}`;
+
+      const resumen = buildResumenFromInputs(aporte, edad, retiro, v1, v2);
+      const tel = '5492804641495';
+      const mailto = 'retiroseguro.plan@gmail.com';
+
+      const wpp = document.getElementById('cta-wpp');
+      wpp.href = `https://wa.me/${tel}?text=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.' )}`;
+
+      const mail = document.getElementById('cta-mail');
+      mail.href = `mailto:${mailto}?subject=${encodeURIComponent('Cotización de retiro')}&body=${encodeURIComponent(resumen + '\n\nQuiero asesoramiento.')}`;
+
+      document.getElementById('post-cta').style.display = 'flex';
+      document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      track('CalcCompleted', {
+        aporte_mensual: aporte,
+        edad_actual: edad,
+        edad_retiro: retiro,
+        escenario1: Math.round(v1),
+        escenario2: Math.round(v2)
+      });
+
+      try { localStorage.setItem('rs_calc', JSON.stringify({ aporte, edad, retiro })); } catch {}
+    }
+
+    document.getElementById('btn-calcular').addEventListener('click', calc);
+    document.getElementById('btn-limpiar').addEventListener('click', () => {
+      document.getElementById('intro').textContent = 'Ingresá los datos y presioná “Calcular”.';
+      document.getElementById('esc1').textContent = '—';
+      document.getElementById('esc2').textContent = '—';
+      document.getElementById('post-cta').style.display = 'none';
+      const e = document.getElementById('calc-error'); e.style.display = 'none'; e.textContent = '';
+    });
+
+    // Restaurar valores si existen
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = localStorage.getItem('rs_calc');
+        if (raw) {
+          const d = JSON.parse(raw);
+          if (d && d.aporte) document.getElementById('aporte').value = d.aporte;
+          if (d && d.edad) document.getElementById('edad-actual').value = d.edad;
+          if (d && d.retiro) document.getElementById('edad-retiro').value = d.retiro;
+        }
+      } catch {}
+    });
+
+    // === Chat nativo conversacional ===
+    const chatFab = document.getElementById('chatFab');
+    const chatPanel = document.getElementById('chatPanel');
+    const chatClose = document.getElementById('chatClose');
+    const chatMsg = document.getElementById('chatMsg');
+    const chatSendWpp = document.getElementById('chatSendWpp');
+    const chatSendEmail = document.getElementById('chatSendEmail');
+    const chatSendMsg = document.getElementById('chatSendMsg');
+    const chatLog = document.getElementById('chatLog');
+    const chatChips = document.getElementById('chatChips');
+
+    function openChat(){
+      chatPanel.style.display = 'block';
+      track('ChatOpen', { source: 'fab' });
+      const resumen = lastSimSummary();
+      if (resumen && !chatMsg.value.trim()){
+        chatMsg.value = "Hola, quiero asesoramiento sobre mi simulación.\n\n" + resumen;
+      }
+    }
+    function closeChat(){ chatPanel.style.display = 'none'; }
+
+    chatFab.addEventListener('click', openChat);
+    if (chatClose) chatClose.addEventListener('click', closeChat);
+
+    // Helpers UI
+    function scrolldown(){ chatLog.scrollTop = chatLog.scrollHeight; }
+    function addUser(msg){ const d = document.createElement('div'); d.className='chat-msg-user'; d.textContent = msg; chatLog.appendChild(d); scrolldown(); }
+    function addBot(msg){ const d = document.createElement('div'); d.className='chat-msg-bot'; d.innerHTML = msg; chatLog.appendChild(d); scrolldown(); }
+    function showTyping(){
+      const t = document.createElement('div'); t.className='typing'; t.textContent='Escribiendo…'; chatLog.appendChild(t); scrolldown(); return t;
+    }
+    function setChips(htmlButtons){
+      chatChips.innerHTML = '';
+      htmlButtons.forEach(([label, key])=>{
+        const b = document.createElement('button');
+        b.className = 'cta ghost';
+        b.textContent = label;
+        b.dataset.chip = key;
+        chatChips.appendChild(b);
+      });
+      chatChips.querySelectorAll('[data-chip]').forEach(b=>{
+        b.addEventListener('click', ()=> handleUserText(b.dataset.chip));
+      });
+    }
+
+    const RESP = {
+      beneficios: `Beneficios clave:<br>• Deducción de Ganancias*<br>• Crecimiento en el tiempo (capitalización mensual)<br>• Flexibilidad para ajustar aportes y rescatar.<br><span class="chat-note">*Sujeto a normativa vigente.</span>`,
+      impuestos: `Impuestos / Ganancias:<br>Los aportes son <strong>deducibles del Impuesto a las Ganancias</strong> según normativa vigente. La deducción puede variar según topes y reglas actuales.`,
+      rescates: `Rescates:<br>Podés hacer <strong>rescates parciales o totales</strong>. La disponibilidad y condiciones dependen del plan y el momento del rescate.`,
+      plazos: `Plazos:<br>Ingresás tu <strong>edad actual</strong>, la <strong>edad de retiro</strong> objetivo y el <strong>aporte mensual</strong>. Proyectamos el capital esperado a ese horizonte.`,
+      seguridad: `Seguridad:<br>Los aportes se invierten en instrumentos regulados y el contrato detalla condiciones de rescate, cargo y beneficios. Si querés te contacta un asesor.`,
+      costos: `Costos:<br>Los costos y cargos dependen del plan elegido. Recomendamos simular primero y luego ajustar con un asesor para maximizar beneficio neto.`,
+      contacto: `Contacto humano:<br>Podés escribirnos por <strong>WhatsApp</strong> o <strong>Email</strong> con los botones de abajo. Si ya simulaste, adjuntamos tu resultado automáticamente.`,
+      como: `Cómo funciona:<br>1) Ingresás edad actual, edad de retiro y aporte mensual.<br>2) Calculamos 2 escenarios (15,9% y 44% anual aprox.).<br>3) Si te gusta el resultado, seguís por WhatsApp o Email.`
+    };
+
+    function replyWith(key){
+      const typing = showTyping();
+      setTimeout(()=>{
+        typing.remove();
+        addBot(RESP[key]);
+        track('ChatBotReply', { intent:key });
+        if (key==='beneficios' || key==='impuestos' || key==='rescates' || key==='como'){
+          setChips([['Cotizar ahora','cotizar'], ['Impuestos','impuestos'], ['Rescates','rescates'], ['Contacto','contacto']]);
+        } else if (key==='contacto'){
+          setChips([['WhatsApp','wpp'], ['Email','email'], ['Cotizar','cotizar']]);
+        } else {
+          setChips([['Cotizar','cotizar'], ['Beneficios','beneficios'], ['Cómo funciona','como']]);
+        }
+      }, 450);
+    }
+
+    function handleUserText(raw){
+      const chatInput = document.getElementById('chatMsg');
+      const text = (raw || chatInput.value || '').trim();
+      if (!text) return;
+      addUser(text);
+      chatInput.value = '';
+
+      const t = text.toLowerCase();
+
+      if (/\bcotiz(ar|a|o)\b/.test(t) || t==='cotizar' || t==='cotizar ahora'){
+        track('ChatIntent', { intent:'cotizar' });
+        addBot('Te llevo al cotizador 👇');
+        const el = document.getElementById('cotizador');
+        if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+        setChips([['Ingresar datos','cotizar'], ['Beneficios','beneficios'], ['Contacto','contacto']]);
+        return;
+      }
+      if (/\bbeneficio(s)?\b/.test(t)) { track('ChatIntent',{intent:'beneficios'}); return replyWith('beneficios'); }
+      if (/\b(impuesto|ganancia|ganancias)\b/.test(t)) { track('ChatIntent',{intent:'impuestos'}); return replyWith('impuestos'); }
+      if (/\brescate(s)?\b/.test(t)) { track('ChatIntent',{intent:'rescates'}); return replyWith('rescates'); }
+      if (/\b(cómo|como)\b.*\bfunciona\b/.test(t) || t==='como' || t==='cómo funciona') { track('ChatIntent',{intent:'como'}); return replyWith('como'); }
+      if (/\bseguridad|seguro|riesgo(s)?\b/.test(t)) { track('ChatIntent',{intent:'seguridad'}); return replyWith('seguridad'); }
+      if (/\b(costo|costos|comisión|comisiones|gasto|gastos)\b/.test(t)) { track('ChatIntent',{intent:'costos'}); return replyWith('costos'); }
+      if (/\b(contacto|asesor|humano|hablar)\b/.test(t)) { track('ChatIntent',{intent:'contacto'}); return replyWith('contacto'); }
+      if (t==='wpp' || t==='whatsapp'){ track('ChatIntent',{intent:'wpp'}); openWhatsAppFromChat(); return; }
+      if (t==='email' || t==='correo'){ track('ChatIntent',{intent:'email'}); openEmailFromChat(); return; }
+
+      const aporte = /aporte\s*([0-9.]+)/.exec(t);
+      const edad = /\bedad\s*([0-9]{2})\b/.exec(t);
+      const retiro = /\bretiro\s*([0-9]{2})\b/.exec(t);
+      if (aporte && edad && retiro){
+        const aporteNum = parseFloat(aporte[1].replace(/\./g,''));
+        const edadNum = parseFloat(edad[1]);
+        const retiroNum = parseFloat(retiro[1]);
+        if (!isNaN(aporteNum) && !isNaN(edadNum) && !isNaN(retiroNum)){
+          try{
+            document.getElementById('aporte').value = aporteNum;
+            document.getElementById('edad-actual').value = edadNum;
+            document.getElementById('edad-retiro').value = retiroNum;
+            calc();
+            track('ChatIntent', { intent:'auto-calc' });
+            const typing = showTyping();
+            setTimeout(()=>{ typing.remove(); addBot('Listo, corrí la simulación con tus datos y te dejé el resultado en pantalla ✅'); }, 400);
+            const el = document.getElementById('resultado'); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+            setChips([['Enviar por WhatsApp','wpp'], ['Enviar por Email','email'], ['Nueva simulación','cotizar']]);
+            return;
+          }catch{}
+        }
+      }
+
+      track('ChatIntent', { intent:'fallback' });
+      const typing = showTyping();
+      setTimeout(()=>{
+        typing.remove();
+        addBot('Puedo ayudarte a <strong>cotizar</strong>, ver <strong>beneficios</strong>, <strong>impuestos</strong> o <strong>rescates</strong>. Probá con “cotizar” o usá los botones 😉');
+        setChips([['Cotizar','cotizar'], ['Beneficios','beneficios'], ['Impuestos','impuestos'], ['Rescates','rescates']]);
+      }, 400);
+    }
+
+    // Chips iniciales
+    document.getElementById('chatChips').querySelectorAll('[data-chip]').forEach(b=>{
+      b.addEventListener('click', ()=> handleUserText(b.dataset.chip));
+    });
+
+    // Botón "Enviar al bot"
+    document.getElementById('chatSendMsg').addEventListener('click', ()=> handleUserText());
+
+    // Envíos externos
+    function openWhatsAppFromChat(){
+      const tel = '5492804641495';
+      const texto = (document.getElementById('chatMsg').value.trim() || lastSimSummary() || 'Hola, quiero asesoramiento sobre planes de retiro.');
+      window.open(`https://wa.me/${tel}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+      track('ChatSend', { channel: 'whatsapp' });
+    }
+    function openEmailFromChat(){
+      const mailto = 'retiroseguro.plan@gmail.com';
+      const subject = 'Consulta desde el chat - Retiro Seguro';
+      const body = (document.getElementById('chatMsg').value.trim() || lastSimSummary() || 'Hola, quiero asesoramiento sobre planes de retiro.');
+      window.location.href = `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      track('ChatSend', { channel: 'email' });
+    }
+    document.getElementById('chatSendWpp').addEventListener('click', openWhatsAppFromChat);
+    document.getElementById('chatSendEmail').addEventListener('click', openEmailFromChat);
+
+    // Métricas extra (opcional): Hero CTA, ScrollToCalculator, ResultCTA
+    (function() {
+      const heroCta = document.getElementById('cta-hero');
+      if (heroCta) heroCta.addEventListener('click', () => { try { gtag('event', 'HeroCTA', { label: 'cotizador' }); } catch {} });
+      const target = document.getElementById('cotizador');
+      if ('IntersectionObserver' in window && target){
+        let fired = false;
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (!fired && e.isIntersecting && e.intersectionRatio > 0.35) {
+              fired = true; try { gtag('event', 'ScrollToCalculator', { via: 'viewport' }); } catch {}
+              io.disconnect();
+            }
+          });
+        }, { threshold: [0.35] });
+        io.observe(target);
+      }
+      const wpp = document.getElementById('cta-wpp');
+      const mail = document.getElementById('cta-mail');
+      if (wpp) wpp.addEventListener('click', () => { try { gtag('event', 'ResultCTA', { channel: 'whatsapp' }); } catch {} });
+      if (mail) mail.addEventListener('click', () => { try { gtag('event', 'ResultCTA', { channel: 'email' }); } catch {} });
+    })();
   </script>
 </body>
 </html>

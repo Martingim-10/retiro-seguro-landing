@@ -98,20 +98,9 @@
     footer{border-top:1px solid var(--border);text-align:center;color:#64748b;padding:24px 0;font-size:14px}
     .link{color:#4f46e5;text-decoration:underline}.link:hover{color:#4338ca}
 
-    /* === Chat nativo === */
-    #chatFab{
-      position:fixed; right:24px; bottom:24px; z-index:9999;
-      padding:12px 16px; border-radius:9999px; border:1px solid var(--border);
-      background:var(--card); color:#111827; font-weight:800; cursor:pointer;
-      box-shadow:0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
-    }
-    #chatFab:hover{ transform:translateY(-2px); }
-    #chatPanel{
-      position:fixed; right:24px; bottom:92px; width:min(360px,calc(100% - 48px));
-      background:#fff; border:1px solid var(--border); border-radius:16px; z-index:9998;
-      box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04);
-      display:none; overflow:hidden;
-    }
+    /* Chat nativo */
+    #chatFab{position:fixed; right:24px; bottom:24px; z-index:9999; padding:12px 16px; border-radius:9999px; border:1px solid var(--border); background:var(--card); color:#111827; font-weight:800; cursor:pointer; box-shadow:0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);}
+    #chatPanel{position:fixed; right:24px; bottom:92px; width:min(360px,calc(100% - 48px)); background:#fff; border:1px solid var(--border); border-radius:16px; z-index:9998; box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04); display:none; overflow:hidden;}
     .chat-header{padding:12px 14px; background:var(--indigo); color:#fff; font-weight:800; display:flex; justify-content:space-between; align-items:center;}
     .chat-body{ padding:12px; display:grid; gap:10px; }
     .chat-msg{width:100%; min-height:80px; padding:10px 12px; font:inherit; border:1px solid var(--border); border-radius:12px; resize:vertical;}
@@ -139,7 +128,6 @@
         <a href="#beneficios">Beneficios</a>
         <a href="#planes">Planes</a>
         <a href="#cotizador">Cotizador</a>
-        <a href="#quienes-somos">Quiénes somos</a>
       </nav>
     </div>
   </header>
@@ -154,69 +142,17 @@
         <p style="margin-top:16px"><a id="cta-hero" class="cta" href="#cotizador">Cotizá ahora</a></p>
       </div>
       <figure class="hero-media">
-        <img src="../assets/hero-playa.jpg" alt="Personas retiradas disfrutando en una playa paradisíaca">
+        <img src="../assets/hero-playa.jpg" alt="Personas retiradas disfrutando en una playa paradisíaca" onerror="this.onerror=null; this.src='../assets/hero.png';">
         <figcaption class="hero-caption">Pasarla bien en el futuro es una decisión.</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- (acá siguen secciones Qué es, Beneficios, Planes, Cotizador, Chat como ya los tenés) -->
-
-  <!-- QUIÉNES SOMOS -->
-  <section id="quienes-somos">
-    <div class="container">
-      <h2>¿Quiénes somos?</h2>
-      <div class="panel" style="margin-top:12px">
-        <h3>Organización Kuzmanich</h3>
-        <p class="muted">
-          Emplazados frente al monumento de la Libertad y el Trabajo, emblema de la Ciudad,
-          nos constituimos en un Grupo comprometido desde el lugar del Servicio, la Idoneidad
-          y la Capacidad Profesional. Enmarcados en el Grupo Sancor Seguros, atendemos a las
-          necesidades cotidianas de las personas, empresas e instituciones.
-        </p>
-        <h3 style="margin-top:20px">Descripción</h3>
-        <p class="muted">
-          Antigüedad y Experiencia, sumadas al loable aporte de jóvenes emprendedores, imprimen
-          en nuestra empresa un sello peculiar. Aquel que se caracteriza por hacer de cada uno
-          de sus productos, la seguridad que necesitás, generar la confianza que sustenta tu
-          decisión y brindarte el asesoramiento que requiere tu inversión.
-        </p>
-        <h3 style="margin-top:20px">Valores</h3>
-        <p class="muted">
-          Asumimos nuestra tarea con dedicación, entusiasmo y responsabilidad. Nos preocupamos
-          por la calidad de las coberturas que ofrecemos y nos distingue el compromiso social
-          y ético en el desempeño de nuestra actividad.
-        </p>
-        <p class="muted">
-          Nuestra solvencia, seriedad, respeto, honestidad, profesionalismo y compromiso nos distinguen.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PREVENCIÓN RETIRO -->
-  <section id="compania">
-    <div class="container">
-      <h2>Respaldados por Prevención Retiro</h2>
-      <div class="panel" style="text-align:center; margin-top:12px">
-        <p class="muted">
-          Comercializamos en forma exclusiva los seguros de <strong>Prevención Retiro</strong>,  
-          compañía autorizada y regulada en Argentina.
-        </p>
-        <img src="https://www.prevencionart.com.ar/prevencion-retiro/img/logo_prevencion_retiro.png"
-             alt="Prevención Retiro"
-             style="max-width:260px; margin:20px auto; display:block">
-        <p class="muted" style="font-size:12px">
-          Autorizados a utilizar su imagen y a comercializar sus productos.
-        </p>
-      </div>
-    </div>
-  </section>
+  <!-- QUÉ ES, BENEFICIOS, PLANES, COTIZADOR, CHAT... -->
+  <!-- (se mantienen igual que en la última versión que tenías funcionando, sin los bloques nuevos) -->
 
   <footer>
     © <span id="y"></span> Retiro Seguro — <a class="link" href="../privacidad.html">Privacidad</a> · <a class="link" href="../terminos.html">Términos</a>
   </footer>
-
-  <!-- Chat y scripts van aquí, igual que ya lo tenías -->
 </body>
 </html>

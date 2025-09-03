@@ -47,8 +47,18 @@
     .brand img{width:64px;height:64px;object-fit:contain}
     /* cambiado a magenta */
     .brand strong{color:var(--magenta);font-weight:900;letter-spacing:.2px}
+    /* Logo en magenta usando el PNG como máscara */
+.brand .logo-mask {
+  width:64px;
+  height:64px;
+  display:inline-block;
+  background: var(--magenta); /* usamos la variable definida arriba */
+  -webkit-mask: url('../assets/logo.png') no-repeat center / contain;
+  mask: url('../assets/logo.png') no-repeat center / contain;
+}
+
     nav{display:none;gap:20px}
-    @media(min-width:820px){nav{display:flex}}
+        @media(min-width:820px){nav{display:flex}}
     nav a{color:#374151;transition:color .3s ease}
     nav a:hover{color:var(--indigo)}
 
@@ -137,9 +147,10 @@
   <header>
     <div class="container bar">
       <a href="/retiro-seguro-landing/v2/" class="brand">
-        <img src="../assets/logo.png" alt="Retiro Seguro">
-        <strong>Retiro Seguro</strong>
-      </a>
+  <span class="logo-mask" aria-label="Retiro Seguro"></span>
+  <strong>Retiro Seguro</strong>
+</a>
+
       <nav aria-label="Principal">
         <a href="#que-es">Qué es</a>
         <a href="#beneficios">Beneficios</a>

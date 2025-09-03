@@ -395,9 +395,12 @@
                 <input id="edad-retiro" class="input" type="number" min="40" max="75" value="65" required>
               </label>
             </div>
-            <label class="muted" style="display:block;margin-top:12px">Aporte mensual (ARS)
-              <input id="aporte" class="input" type="number" min="10000" step="1000" value="50000" required>
-            </label>
+           <label class="muted" style="display:block;margin-top:12px">
+  Aporte mensual (ARS) — <strong>mínimo $30.000</strong>
+  <input id="aporte" class="input" type="number" min="30000" step="1000" value="50000" required>
+</label>
+<p class="muted" style="font-size:12px;margin-top:6px">Mínimo permitido: $30.000 por mes.</p>
+
 
             <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
               <button id="btn-calcular" class="cta" type="button">Calcular</button>
@@ -516,7 +519,7 @@
 - Edad retiro: ${retiro}
 - Aporte mensual: ${fmtARS.format(aporte)}
 - Escenario 1 (15,9%): ${fmtARS.format(v1)}
-- Escenario 2 (44%): ${fmtARS.format(v2)}`;
+- Escenario 2 (30%): ${fmtARS.format(v2)}`;
     }
     function lastSimSummary(){
       try {
@@ -539,9 +542,16 @@
       track('CalcStart', { aporte_mensual: aporte, edad_actual: edad, edad_retiro: retiro });
       if (isNaN(aporte) || isNaN(edad) || isNaN(retiro)) { e.textContent = "Valores inválidos."; e.style.display = 'block'; return; }
       const anios = retiro - edad; const meses = anios * 12;
-      if (anios <= 0) { e.textContent = "La edad de retiro debe ser mayor a la actual."; e.style.display = 'block'; return; }
-      if (aporte <= 0) { e.textContent = "El aporte mensual debe ser mayor a cero."; e.style.display = 'block'; return; }
-      const T1 = 0.159, T2 = 0.44;
+      if (anios <= 0) {
+  e.textContent = "La edad de retiro debe ser mayor a la actual.";
+  e.style.display = 'block'; return;
+}
+if (aporte < 30000) {
+  e.textContent = "El aporte mínimo es $30.000 por mes.";
+  e.style.display = 'block'; return;
+}
+
+      const T1 = 0.159, T2 = 0.30;
       const v1 = calcularValorAcumulado(aporte, meses, T1);
       const v2 = calcularValorAcumulado(aporte, meses, T2);
       document.getElementById('intro').textContent = `¡Excelente! Con un aporte de ${fmtARS.format(aporte)} por mes, y proyectando tu retiro a los ${retiro} años, aquí tenés dos escenarios:`;

@@ -522,7 +522,7 @@
       try {
         const raw = localStorage.getItem('rs_calc'); if (!raw) return '';
         const d = JSON.parse(raw); if (!d) return '';
-        const T1 = 0.159, T2 = 0.44;
+        const T1 = 0.159, T2 = 0.30;
         const anios = (d.retiro - d.edad); if (isNaN(anios) || anios <= 0 || isNaN(d.aporte)) return '';
         const meses = anios * 12;
         const v1 = calcularValorAcumulado(d.aporte, meses, T1);

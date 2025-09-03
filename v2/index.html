@@ -30,6 +30,9 @@
       --muted:#475569; --text:#0f172a; --border:#e2e8f0;
       --gradient: linear-gradient(45deg, var(--indigo-700), #ff7e5f);
       --radius:16px;
+      /* agregado */
+      --magenta:#d61f69;
+      --magenta-dark:#b5175a;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;font-family:'Montserrat',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
@@ -42,7 +45,8 @@
     .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
     .brand{display:flex;align-items:center;gap:10px}
     .brand img{width:64px;height:64px;object-fit:contain}
-    .brand strong{color:var(--indigo);font-weight:900;letter-spacing:.2px}
+    /* cambiado a magenta */
+    .brand strong{color:var(--magenta);font-weight:900;letter-spacing:.2px}
     nav{display:none;gap:20px}
     @media(min-width:820px){nav{display:flex}}
     nav a{color:#374151;transition:color .3s ease}
@@ -86,8 +90,23 @@
     .form-row{display:grid;gap:12px;grid-template-columns:1fr}
     @media(min-width:680px){.form-row{grid-template-columns:1fr 1fr}}
     .input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;color:#0f172a;font:inherit}
-    .cta{display:inline-block;background:var(--gradient);color:#fff;font-weight:800;border:none;padding:12px 18px;border-radius:12px;cursor:pointer;text-decoration:none}
-    .cta.ghost{background:#fff;color:#374151;border:1px solid var(--border)}
+
+    /* cambiado: CTA magenta */
+    .cta{
+      display:inline-block;
+      background:var(--magenta);
+      color:#fff;
+      font-weight:800;
+      border:none;
+      padding:12px 18px;
+      border-radius:12px;
+      cursor:pointer;
+      text-decoration:none;
+      transition:background .3s ease;
+    }
+    .cta:hover{ background:var(--magenta-dark); }
+    .cta.ghost{ background:#fff; color:#374151; border:1px solid var(--border) }
+
     .result-grid{display:grid;gap:12px;grid-template-columns:1fr}
     @media(min-width:680px){.result-grid{grid-template-columns:1fr 1fr}}
     .error{color:#dc2626;font-weight:700}
@@ -142,7 +161,11 @@
           <span><strong>No pedimos datos personales para usar el cotizador.</strong> Si te gusta el resultado, después podés continuar por WhatsApp o email.</span>
         </div>
         <p style="margin-top:16px">
-          <a id="cta-hero" class="cta" href="#cotizador">Cotizá ahora</a>
+          <!-- cambiado: logo chico dentro del botón -->
+          <a id="cta-hero" class="cta" href="#cotizador" style="display:flex;align-items:center;gap:8px;justify-content:center">
+            <img src="../assets/Prevenci%C3%B3n%20Retiro.png" alt="Prevención Retiro" style="height:22px;width:auto">
+            Cotizá ahora
+          </a>
         </p>
       </div>
 

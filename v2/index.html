@@ -39,6 +39,23 @@
     a{color:inherit;text-decoration:none}
     img{display:block;max-width:100%;height:auto}
     .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    /* Solo los beneficios clickeables muestran cursor y hover */
+.card { transition: transform .3s ease, box-shadow .3s ease; }
+.card:hover { transform:none; box-shadow:none; }              /* desactiva hover global */
+
+.card.beneficio { cursor:pointer; }                            /* solo clickeables */
+.card.beneficio:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+}
+
+/* Insignia “+ info” */
+.badge-info{
+  display:inline-block; margin-top:10px; font-size:12px; font-weight:700;
+  background:#eef2ff; border:1px solid #c7d2fe; color:#4338ca;
+  padding:4px 8px; border-radius:9999px;
+}
+
 
     /* Header */
     header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--border)}
@@ -239,20 +256,25 @@
   <div class="container">
     <h2>Beneficios clave</h2>
    <div class="grid grid-3" style="margin-top:12px">
-  <div class="card beneficio" data-img="../assets/deduccion ganancias.jpg">
+  <div class="card beneficio" data-img="../assets/deduccion ganancias.jpg" aria-label="Ver imagen: Deducción de Ganancias">
     <span class="icon">💸</span>
     <strong>Deducción de Ganancias</strong>
     <p class="muted" style="margin-top:6px">Aprovechá el beneficio impositivo vigente.</p>
+    <span class="badge-info">+ info</span>
   </div>
-  <div class="card beneficio" data-img="../assets/capitalizacion.png">
+
+  <div class="card beneficio" data-img="../assets/capitalizacion.png" aria-label="Ver imagen: Crecimiento en el tiempo">
     <span class="icon">📈</span>
     <strong>Crecimiento en el tiempo</strong>
     <p class="muted" style="margin-top:6px">Capitalizá tus aportes con visión de largo plazo.</p>
+    <span class="badge-info">+ info</span>
   </div>
-  <div class="card beneficio" data-img="../assets/flexibilidad.png">
+
+  <div class="card beneficio" data-img="../assets/flexibilidad.png" aria-label="Ver imagen: Flexibilidad real">
     <span class="icon">✅</span>
     <strong>Flexibilidad real</strong>
     <p class="muted" style="margin-top:6px">Ajustá aportes y elegí cómo avanzar.</p>
+    <span class="badge-info">+ info</span>
   </div>
 </div>
         
